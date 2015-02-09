@@ -1,0 +1,114 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'pathname'
+require 'pp'
+
+BASE=Pathname.new(__FILE__).realpath.parent.parent
+$: << BASE + 'lib'
+
+require 'colore'
+
+base_uri = 'http://localhost:9240/'
+backtrace = false
+request = nil
+app = nil
+doc_id = nil
+version = Colore::CURRENT
+language = 'en'
+formats = nil
+title = nil
+file = nil
+output_file = nil
+callback_url = nil
+verbose = nil
+
+REQUESTS = %w(
+  ping
+  create_document update_document request_new_format delete_document
+  delete_version get_document get_document_info
+  convert
+ )
+
+OptionParser.new do |opts|
+  opts.banner = 'Usage: colore_client -r {request} [opts]'
+  opts.on( '-r', '--request NAME', REQUESTS, 'Request to perform' ) { |r| request = r }
+  opts.on( '-u', '--base-uri', 'Base URI' ) { |u| base_uri = u }
+  opts.on( '-a', '--app APP', 'Application name' ) { |a| app = a }
+  opts.on( '-d', '--doc-id ID', 'Document id' ) { |d| doc_id = d }
+  opts.on( '-v', '--version VERSION', 'Version id' ) { |v| version = v }
+  opts.on( '-f', '--file FILE', 'File to upload/convert' ) { |f| file = f }
+  opts.on( '-o', '--output-file FILE', 'File to write to' ) { |f| output_file = f }
+  opts.on( '-m', '--formats x,y,z', Array, 'Format types' ) { |f| formats = f }
+  opts.on( '-l', '--language LANG', 'Language of document' ) { |l| language = l }
+  opts.on( '-t', '--title TITLE', 'Document title' ) { |t| title = t }
+  opts.on( '-c', '--callback-url URL', 'Callback URL for conversion callbacks' ) { |c| callback_url = c }
+  opts.on( '-B', '--backtrace', 'Request backtrace on errors' ) { backtrace = true }
+  opts.on( '-V', '--verbose', 'Log interactions' ) { verbose = true }
+  opts.on( '-h', '--help', 'This message' ) { puts opts; exit 0 }
+  opts.separator "Valid requests: #{REQUESTS.join ', '}"
+end.parse!
+
+logger = Logger.new( verbose ? STDOUT : nil )
+
+client = Colore::Client.new base_uri: base_uri, app: app, backtrace: backtrace, logger: logger
+
+begin
+  resp = nil
+  case request
+    when 'ping'
+      resp = client.ping
+    when 'create_document'
+      resp = client.create_document(
+        doc_id: doc_id,
+        title: title,
+        filename: ( File.basename(file) if file ),
+        content: ( File.read(file) if file ),
+        formats: formats,
+        callback_url: callback_url
+      )
+    when 'update_document'
+      resp = client.update_document(
+        doc_id: doc_id,
+        title: title,
+        filename: ( File.basename(file) if file ),
+        content: ( File.read(file) if file ),
+        formats: formats,
+        callback_url: callback_url
+      )
+    when 'request_new_format'
+      formats.each do |format|
+        resp = client.request_new_format doc_id: doc_id, version: version, filename:File.basename(file), format: format, callback_url: callback_url
+      end
+    when 'delete_document'
+      resp = client.delete_document doc_id: doc_id
+    when 'delete_version'
+      resp = client.delete_version doc_id: doc_id, version: version
+    when 'get_document'
+      resp = client.delete_document doc_id: doc_id, version: version, filename: filename
+      if output_file
+        File.open(output_file, "wb" ) { |f| f.write(resp) }
+        resp = nil
+      end
+    when 'get_document_info'
+      resp = client.get_document_info doc_id: doc_id
+    when 'convert'
+      resp = client.convert content: File.read(file), format: formats[0], language: language
+      if output_file
+        File.open(output_file, "wb" ) { |f| f.write(resp) }
+        resp = nil
+      end
+    else
+      raise "Unhandled request type: #{request}"
+  end
+
+  if resp.respond_to? :to_hash
+    resp.respond_to? :to_hash
+  else
+    STDOUT.write resp
+  end
+  
+rescue Colore::Errors::APIError => e
+  puts "Received error from colore: #{e.http_code}, #{e.message}"
+  pp e.rsp_backtrace if backtrace
+end
