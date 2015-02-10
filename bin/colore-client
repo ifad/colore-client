@@ -7,7 +7,7 @@ require 'pp'
 BASE=Pathname.new(__FILE__).realpath.parent.parent
 $: << BASE + 'lib'
 
-require 'colore'
+require 'colore-client'
 
 base_uri = 'http://localhost:9240/'
 backtrace = false
