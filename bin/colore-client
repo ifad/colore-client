@@ -25,7 +25,8 @@ verbose = nil
 
 REQUESTS = %w(
   ping
-  create_document update_document request_conversion delete_document
+  create_document update_document update_title
+  request_conversion delete_document
   delete_version get_document get_document_info
   convert
  )
@@ -70,12 +71,13 @@ begin
     when 'update_document'
       resp = client.update_document(
         doc_id: doc_id,
-        title: title,
         filename: ( File.basename(file) if file ),
         content: ( File.read(file) if file ),
         actions: actions,
         callback_url: callback_url
       )
+    when 'update_title'
+      resp = client.update_document( doc_id: doc_id, title: title )
     when 'request_conversion'
       actions.each do |action|
         resp = client.request_conversion doc_id: doc_id, version: version, filename:File.basename(file), action: action, callback_url: callback_url

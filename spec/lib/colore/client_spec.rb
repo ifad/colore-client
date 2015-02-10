@@ -70,8 +70,7 @@ describe Colore::Client, :vcr do
       client.create_document(
         doc_id: doc_id,
         filename: filename,
-        content: File.read(filename),
-        title: 'Sample document' )
+        content: File.read(filename) )
       rsp = client.update_document(
         doc_id: doc_id,
         filename: filename,
@@ -89,6 +88,25 @@ describe Colore::Client, :vcr do
           filename: filename,
           content: File.read(filename)
         ) }.to raise_error
+    end
+  end
+
+  context '#update_title' do
+    it 'runs' do
+      doc_id = 'test_update_title_1'
+      client.create_document(
+        doc_id: doc_id,
+        filename: filename,
+        content: File.read(filename) )
+      rsp = client.update_title( doc_id: doc_id, title: 'This is a new title' )
+      expect(rsp.status).to eq 200
+      expect(rsp.description.to_s).to_not eq ''
+    end
+
+    it 'fails on an invalid doc_id' do
+      expect{
+        client.update_document( doc_id: 'foo', title: 'foo' )
+      }.to raise_error
     end
   end
 
@@ -136,8 +154,8 @@ describe Colore::Client, :vcr do
       client.update_document(
         doc_id: doc_id,
         filename: filename,
-        content: File.read(filename),
-        title: 'Sample document' )
+        content: File.read(filename)
+      )
       rsp = client.delete_version( doc_id: doc_id, version: 'v001')
       expect(rsp.status).to eq 200
       expect(rsp.description.to_s).to_not eq ''
@@ -153,8 +171,8 @@ describe Colore::Client, :vcr do
       client.update_document(
         doc_id: doc_id,
         filename: filename,
-        content: File.read(filename),
-        title: 'Sample document' )
+        content: File.read(filename)
+      )
       expect{
         client.delete_version( doc_id: doc_id, version: 'v002')
       }.to raise_error

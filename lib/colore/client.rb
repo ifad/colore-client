@@ -75,16 +75,14 @@ module Colore
     # @param doc_id [String] the document's unique identifier
     # @param filename [String] the name of the file to store
     # @param content [String] the body of the file (e.g. from [File#read])
-    # @param title [String] An optional short description of the document
     # @param actions [Array] a list of optional conversions to perform once the
     #        file has been stored (e.g. ['ocr', 'ocr_text']
     # @param callback_url [String] an optional callback URL that Colore will send the
     #        results of its conversions to (one per action). It is your responsibility to
     #        have something listening on this URL, ready to take a JSON object with the
     #        results of the conversion in it.
-    def update_document( doc_id:, filename:, content: nil, title:nil, actions:nil, callback_url:nil )
+    def update_document( doc_id:, filename:, content: nil, actions:nil, callback_url:nil )
       params = {}
-      params[:title] = title if title
       params[:actions] = actions if actions
       params[:callback_url] = callback_url if callback_url
       params[:backtrace] = @backtrace if @backtrace
@@ -102,6 +100,13 @@ module Colore
         response = send_request :post, "document/#{@app}/#{doc_id}/#{base_filename}", params, :json
       end
       response
+    end
+
+    # Updates the document title
+    # @param doc_id [String] the document's unique identifier
+    # @param title [String] A short description of the document
+    def update_title( doc_id:, title: )
+      send_request :post, "document/#{@app}/#{doc_id}/title/#{URI.escape title}", {}, :json
     end
 
     # Requests a conversion of an existing document

@@ -1,13 +1,13 @@
 ---
 http_interactions:
 - request:
-    method: post
-    uri: http://localhost:9240/convert
+    method: put
+    uri: http://localhost:9240/document/client_test/test_update_title_1/quickfox.jpg
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        LS0yNjc0OTkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFt
-        ZT0iZmlsZSI7IGZpbGVuYW1lPSJjb2xvcmUyMDE1MDIxMC03MTEtbXNldWZz
+        LS03NTY5MjINCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFt
+        ZT0iZmlsZSI7IGZpbGVuYW1lPSJjb2xvcmUyMDE1MDIxMC03MTEtcXJxZmln
         Ig0KQ29udGVudC1UeXBlOiBpbWFnZS9qcGVnDQoNCv/Y/+AAEEpGSUYAAQEB
         AGAAYAAA/9sAQwACAQECAQECAgICAgICAgMFAwMDAwMGBAQDBQcGBwcHBgcH
         CAkLCQgICggHBwoNCgoLDAwMDAcJDg8NDA4LDAwM/9sAQwECAgIDAwMGAwMG
@@ -141,30 +141,27 @@ http_interactions:
         CiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK
         KKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoo
         ooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiii
-        gAooooA//9kNCi0tMjY3NDk5DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3Jt
-        LWRhdGE7IG5hbWU9ImFjdGlvbiINCg0KZm9vYmFyDQotLTI2NzQ5OQ0KQ29u
-        dGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJsYW5ndWFnZSIN
-        Cg0KZW4NCi0tMjY3NDk5LS0NCg==
+        gAooooA//9kNCi0tNzU2OTIyLS0NCg==
     headers:
       Accept:
       - "*/*; q=0.5, application/xml"
       Accept-Encoding:
       - gzip, deflate
       Content-Length:
-      - '6229'
+      - '6097'
       Content-Type:
-      - multipart/form-data; boundary=267499
+      - multipart/form-data; boundary=756922
       User-Agent:
       - Ruby
   response:
     status:
-      code: 400
-      message: Bad Request
+      code: 201
+      message: Created
     headers:
       Content-Type:
       - application/json
       Content-Length:
-      - '106'
+      - '169'
       X-Content-Type-Options:
       - nosniff
       Connection:
@@ -173,8 +170,44 @@ http_interactions:
       - thin
     body:
       encoding: UTF-8
-      string: '{"status":400,"description":"No task found for action: ''foobar'',
-        mime_type: ''image/jpeg; charset=binary''"}'
+      string: '{"status":201,"description":"Document stored","app":"client_test","doc_id":"test_update_title_1","path":"/document/client_test/test_update_title_1/current/quickfox.jpg"}'
     http_version: 
-  recorded_at: Tue, 10 Feb 2015 12:11:33 GMT
+  recorded_at: Tue, 10 Feb 2015 12:11:32 GMT
+- request:
+    method: post
+    uri: http://localhost:9240/document/client_test/test_update_title_1/title/This%20is%20a%20new%20title
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '44'
+      X-Content-Type-Options:
+      - nosniff
+      Connection:
+      - keep-alive
+      Server:
+      - thin
+    body:
+      encoding: UTF-8
+      string: '{"status":200,"description":"Title updated"}'
+    http_version: 
+  recorded_at: Tue, 10 Feb 2015 12:11:32 GMT
 recorded_with: VCR 2.9.3
