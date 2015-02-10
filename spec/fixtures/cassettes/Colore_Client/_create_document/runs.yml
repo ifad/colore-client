@@ -6,12 +6,12 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        LS01MDI0MDYNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFt
-        ZT0idGl0bGUiDQoNClNhbXBsZSBkb2N1bWVudA0KLS01MDI0MDYNCkNvbnRl
-        bnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iZm9ybWF0c1tdIg0K
-        DQpvY3INCi0tNTAyNDA2DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRh
-        dGE7IG5hbWU9ImZpbGUiOyBmaWxlbmFtZT0iY29sb3JlMjAxNTAyMTAtMzA3
-        MTkta3BwdjYzIg0KQ29udGVudC1UeXBlOiBpbWFnZS9qcGVnDQoNCv/Y/+AA
+        LS04MzAwOTkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFt
+        ZT0idGl0bGUiDQoNClNhbXBsZSBkb2N1bWVudA0KLS04MzAwOTkNCkNvbnRl
+        bnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iYWN0aW9uc1tdIg0K
+        DQpvY3INCi0tODMwMDk5DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRh
+        dGE7IG5hbWU9ImZpbGUiOyBmaWxlbmFtZT0iY29sb3JlMjAxNTAyMTAtMTk2
+        OS0xcnk1eTJ2Ig0KQ29udGVudC1UeXBlOiBpbWFnZS9qcGVnDQoNCv/Y/+AA
         EEpGSUYAAQEBAGAAYAAA/9sAQwACAQECAQECAgICAgICAgMFAwMDAwMGBAQD
         BQcGBwcHBgcHCAkLCQgICggHBwoNCgoLDAwMDAcJDg8NDA4LDAwM/9sAQwEC
         AgIDAwMGAwMGDAgHCAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwM
@@ -144,7 +144,7 @@ http_interactions:
         r300VtSiiioKCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKA
         CiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK
         KKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoo
-        ooAKKKKACiiigAooooA//9kNCi0tNTAyNDA2LS0NCg==
+        ooAKKKKACiiigAooooA//9kNCi0tODMwMDk5LS0NCg==
     headers:
       Accept:
       - "*/*; q=0.5, application/xml"
@@ -153,7 +153,7 @@ http_interactions:
       Content-Length:
       - '6241'
       Content-Type:
-      - multipart/form-data; boundary=502406
+      - multipart/form-data; boundary=830099
       User-Agent:
       - Ruby
   response:
@@ -175,5 +175,5 @@ http_interactions:
       encoding: UTF-8
       string: '{"status":201,"description":"Document stored","app":"client_test","doc_id":"test_doc_1","path":"/document/client_test/test_doc_1/current/quickfox.jpg"}'
     http_version: 
-  recorded_at: Tue, 10 Feb 2015 09:47:36 GMT
+  recorded_at: Tue, 10 Feb 2015 10:44:59 GMT
 recorded_with: VCR 2.9.3

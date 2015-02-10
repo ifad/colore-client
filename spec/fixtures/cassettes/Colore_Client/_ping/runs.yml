@@ -21,7 +21,7 @@ http_interactions:
       Content-Type:
       - text/html;charset=utf-8
       Content-Length:
-      - '2200'
+      - '977'
       X-Xss-Protection:
       - 1; mode=block
       X-Content-Type-Options:
@@ -53,49 +53,22 @@ http_interactions:
               <span>API</span>
             </div>
             <div class='container'>
-              <h1>Colore online conversion</h1>
-              <form class='form-horizontal' method='POST'>
-                <div class='form-group'>
-                  <div class='col-xs-2 control-label'>File:</div>
-                  <div class='col-xs-6'>
-                    <input class='form-control' id='file' type='file'>
-                  </div>
-                </div>
-                <div class='form-group'>
-                  <div class='col-xs-2 control-label'>URL:</div>
-                  <div class='col-xs-6'>
-                    <input class='form-control' id='url' type='text'>
-                  </div>
-                </div>
-                <div class='form-group'>
-                  <div class='col-xs-2 control-label'>Action:</div>
-                  <div class='col-xs-6'>
-                    <select class='form-control' id='action'>
-                      <option value='pdf'>Convert to PDF</option>
-                      <option value='ocr'>OCR and save as PDF</option>
-                      <option value='doc'>Convert to MS Word</option>
-                    </select>
-                  </div>
-                </div>
-                <div class='form-group'>
-                  <div class='col-xs-offset-2 col-xs-6'>
-                    <button class='btn btn-primary' id='convert_btn'>Convert</button>
-                  </div>
-                </div>
-                <div class='form-group hidden'>
-                  <div class='col-xs-offset-2 col-xs-6'>
-                    <span id='downloading'>Downloading...</span>
-                  </div>
-                </div>
-                <div class='form-group hidden'>
-                  <div class='col-xs-offset-2 col-xs-6'>
-                    <a href='#' id='download_link'>File converted. Click here to download</a>
-                  </div>
-                </div>
-              </form>
+              <!DOCTYPE html>
+              <html>
+                <head>
+                  <title>Colore</title>
+                </head>
+                <body>
+                  <h1>Colore</h1>
+                  <p>
+                    Welcome to the Colore application. This is an API service to store and convert
+                    documents.
+                  </p>
+                </body>
+              </html>
             </div>
           </body>
         </html>
     http_version: 
-  recorded_at: Tue, 10 Feb 2015 09:47:26 GMT
+  recorded_at: Tue, 10 Feb 2015 10:44:49 GMT
 recorded_with: VCR 2.9.3

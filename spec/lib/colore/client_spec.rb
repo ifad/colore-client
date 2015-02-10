@@ -35,7 +35,7 @@ describe Colore::Client, :vcr do
         filename: filename,
         content: File.read(filename),
         title: 'Sample document',
-        formats: [ 'ocr' ],
+        actions: [ 'ocr' ],
         callback_url: nil )
       expect(rsp).to_not be_nil
       expect(rsp.status).to eq 201
@@ -50,7 +50,7 @@ describe Colore::Client, :vcr do
         filename: filename,
         content: File.read(filename),
         title: 'Sample document',
-        formats: [ 'ocr' ],
+        actions: [ 'ocr' ],
         callback_url: nil )
       expect {
         client.create_document(
@@ -58,7 +58,7 @@ describe Colore::Client, :vcr do
           filename: filename,
           content: File.read(filename),
           title: 'Sample document',
-          formats: [ 'ocr' ],
+          actions: [ 'ocr' ],
           callback_url: nil )
       }.to raise_error
     end
@@ -92,19 +92,19 @@ describe Colore::Client, :vcr do
     end
   end
 
-  context '#request_new_format' do
+  context '#request_conversion' do
     it 'runs' do
-      doc_id = 'test_new_format_1'
+      doc_id = 'test_new_conv_1'
       client.create_document(
         doc_id: doc_id,
         filename: filename,
         content: File.read(filename),
         title: 'Sample document' )
-      rsp = client.request_new_format(
+      rsp = client.request_conversion(
         doc_id: doc_id,
         version: Colore::CURRENT,
         filename: filename,
-        format: 'ocr'
+        action: 'ocr'
       )
       expect(rsp.status).to eq 202
       expect(rsp.description.to_s).to_not eq ''
@@ -207,15 +207,15 @@ describe Colore::Client, :vcr do
 
   context '#convert' do
     it 'runs' do
-      rsp = client.convert content: File.read(filename), format: 'ocr_text'
+      rsp = client.convert content: File.read(filename), action: 'ocr_text'
       expect(rsp).to be_a String
       expect(rsp).to_not eq ''
       expect(rsp.mime_type).to eq 'text/plain; charset=us-ascii'
     end
 
-    it 'fails on invalid format' do
+    it 'fails on invalid action' do
       expect{
-        client.convert content: File.read(filename), format: 'foobar'
+        client.convert content: File.read(filename), action: 'foobar'
       }.to raise_error
     end
   end

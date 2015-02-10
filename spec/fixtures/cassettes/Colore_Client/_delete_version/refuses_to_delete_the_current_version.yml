@@ -6,10 +6,10 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        LS02OTc1NTYNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFt
-        ZT0idGl0bGUiDQoNClNhbXBsZSBkb2N1bWVudA0KLS02OTc1NTYNCkNvbnRl
+        LS05NjA2NTcNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFt
+        ZT0idGl0bGUiDQoNClNhbXBsZSBkb2N1bWVudA0KLS05NjA2NTcNCkNvbnRl
         bnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iZmlsZSI7IGZpbGVu
-        YW1lPSJjb2xvcmUyMDE1MDIxMC0zMDcxOS1wYXc5NjYiDQpDb250ZW50LVR5
+        YW1lPSJjb2xvcmUyMDE1MDIxMC0xOTY5LTFlcDB3dm4iDQpDb250ZW50LVR5
         cGU6IGltYWdlL2pwZWcNCg0K/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIB
         AQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0K
         CgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwM
@@ -142,8 +142,8 @@ http_interactions:
         23r13Vl9nXWV9M3H3+fySfnZJLRaKyWvfTRW1KKKKgoKKKKACiiigAooooAK
         KKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoo
         ooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiii
-        gAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD//2Q0KLS02
-        OTc1NTYtLQ0K
+        gAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD//2Q0KLS05
+        NjA2NTctLQ0K
     headers:
       Accept:
       - "*/*; q=0.5, application/xml"
@@ -152,7 +152,7 @@ http_interactions:
       Content-Length:
       - '6174'
       Content-Type:
-      - multipart/form-data; boundary=697556
+      - multipart/form-data; boundary=960657
       User-Agent:
       - Ruby
   response:
@@ -174,17 +174,17 @@ http_interactions:
       encoding: UTF-8
       string: '{"status":201,"description":"Document stored","app":"client_test","doc_id":"test_delete_version_2","path":"/document/client_test/test_delete_version_2/current/quickfox.jpg"}'
     http_version: 
-  recorded_at: Tue, 10 Feb 2015 09:47:37 GMT
+  recorded_at: Tue, 10 Feb 2015 10:45:00 GMT
 - request:
     method: post
     uri: http://localhost:9240/document/client_test/test_delete_version_2/quickfox.jpg
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        LS00NDk3NjINCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFt
-        ZT0idGl0bGUiDQoNClNhbXBsZSBkb2N1bWVudA0KLS00NDk3NjINCkNvbnRl
+        LS05MTc0ODYNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFt
+        ZT0idGl0bGUiDQoNClNhbXBsZSBkb2N1bWVudA0KLS05MTc0ODYNCkNvbnRl
         bnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0iZmlsZSI7IGZpbGVu
-        YW1lPSJjb2xvcmUyMDE1MDIxMC0zMDcxOS1xeXIwdmUiDQpDb250ZW50LVR5
+        YW1lPSJjb2xvcmUyMDE1MDIxMC0xOTY5LTFxNnlub2IiDQpDb250ZW50LVR5
         cGU6IGltYWdlL2pwZWcNCg0K/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIB
         AQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0K
         CgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwM
@@ -317,8 +317,8 @@ http_interactions:
         23r13Vl9nXWV9M3H3+fySfnZJLRaKyWvfTRW1KKKKgoKKKKACiiigAooooAK
         KKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoo
         ooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiii
-        gAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD//2Q0KLS00
-        NDk3NjItLQ0K
+        gAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD//2Q0KLS05
+        MTc0ODYtLQ0K
     headers:
       Accept:
       - "*/*; q=0.5, application/xml"
@@ -327,7 +327,7 @@ http_interactions:
       Content-Length:
       - '6174'
       Content-Type:
-      - multipart/form-data; boundary=449762
+      - multipart/form-data; boundary=917486
       User-Agent:
       - Ruby
   response:
@@ -349,7 +349,7 @@ http_interactions:
       encoding: UTF-8
       string: '{"status":201,"description":"Document stored","app":"client_test","doc_id":"test_delete_version_2","path":"/document/client_test/test_delete_version_2/current/quickfox.jpg"}'
     http_version: 
-  recorded_at: Tue, 10 Feb 2015 09:47:37 GMT
+  recorded_at: Tue, 10 Feb 2015 10:45:00 GMT
 - request:
     method: delete
     uri: http://localhost:9240/document/client_test/test_delete_version_2/v002
@@ -383,5 +383,5 @@ http_interactions:
       string: '{"status":400,"description":"Version is current, change current version
         first"}'
     http_version: 
-  recorded_at: Tue, 10 Feb 2015 09:47:37 GMT
+  recorded_at: Tue, 10 Feb 2015 10:45:00 GMT
 recorded_with: VCR 2.9.3

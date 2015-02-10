@@ -47,16 +47,16 @@ module Colore
     # @param filename [String] the name of the file to store
     # @param content [String] the body of the file (e.g. from [File#read])
     # @param title [String] An optional short description of the document
-    # @param formats [Array] a list of optional conversions to perform once the
+    # @param actions [Array] a list of optional conversions to perform once the
     #        file has been stored (e.g. ['ocr', 'ocr_text']
     # @param callback_url [String] an optional callback URL that Colore will send the
-    #        results of its conversions to (one per format). It is your responsibility to
+    #        results of its conversions to (one per action). It is your responsibility to
     #        have something listening on this URL, ready to take a JSON object with the
     #        results of the conversion in it.
-    def create_document( doc_id:, filename:, content:, title:nil, formats:nil, callback_url:nil )
+    def create_document( doc_id:, filename:, content:, title:nil, actions:nil, callback_url:nil )
       params = {}
       params[:title] = title if title
-      params[:formats] = formats if formats
+      params[:actions] = actions if actions
       params[:callback_url] = callback_url if callback_url
       params[:backtrace] = @backtrace if @backtrace
 
@@ -76,16 +76,16 @@ module Colore
     # @param filename [String] the name of the file to store
     # @param content [String] the body of the file (e.g. from [File#read])
     # @param title [String] An optional short description of the document
-    # @param formats [Array] a list of optional conversions to perform once the
+    # @param actions [Array] a list of optional conversions to perform once the
     #        file has been stored (e.g. ['ocr', 'ocr_text']
     # @param callback_url [String] an optional callback URL that Colore will send the
-    #        results of its conversions to (one per format). It is your responsibility to
+    #        results of its conversions to (one per action). It is your responsibility to
     #        have something listening on this URL, ready to take a JSON object with the
     #        results of the conversion in it.
-    def update_document( doc_id:, filename:, content: nil, title:nil, formats:nil, callback_url:nil )
+    def update_document( doc_id:, filename:, content: nil, title:nil, actions:nil, callback_url:nil )
       params = {}
       params[:title] = title if title
-      params[:formats] = formats if formats
+      params[:actions] = actions if actions
       params[:callback_url] = callback_url if callback_url
       params[:backtrace] = @backtrace if @backtrace
 
@@ -104,22 +104,22 @@ module Colore
       response
     end
 
-    # Requests a new conversion of an existing document
+    # Requests a conversion of an existing document
     # @param doc_id [String] the document's unique identifier
     # @param filename [String] the name of the file to convert
     # @param version [String] the version to store (if not specified, will be [CURRENT]
-    # @param format [String] the conversion to perform
+    # @param action [String] the conversion to perform
     # @param callback_url [String] an optional callback URL that Colore will send the
     #        results of its conversion to. It is your responsibility to
     #        have something listening on this URL, ready to take a JSON object with the
     #        results of the conversion in it.
     # @return [Hash] a standard response
-    def request_new_format( doc_id:, version:CURRENT, filename:, format:, callback_url:nil )
+    def request_conversion( doc_id:, version:CURRENT, filename:, action:, callback_url:nil )
       params = {}
       params[:callback_url] = callback_url if callback_url
       params[:backtrace] = @backtrace if @backtrace
 
-      send_request :post, "#{url_for doc_id, version, filename}/#{format}", params, :json
+      send_request :post, "#{url_for doc_id, version, filename}/#{action}", params, :json
     end
 
     # Completely deletes a document
@@ -165,16 +165,16 @@ module Colore
 
     # Performs a foreground conversion of a file
     # @param content [String] the file contents
-    # @param format [String] the conversion action to perform
+    # @param action [String] the conversion to perform
     # @param language [String] the language of the file (defaults to 'en') - only needed for OCR operations
-    def convert( content:, format:, language:'en' )
+    def convert( content:, action:, language:'en' )
       params = {}
       response = nil
       Tempfile.open( 'colore' ) do |tf|
         tf.write(content)
         tf.close
         params[:file] = File.new(tf)
-        params[:format] = format
+        params[:action] = action
         params[:language] = language if language
         params[:backtrace] = @backtrace if @backtrace
         response  = send_request :post, "convert", params, :binary
