@@ -6,6 +6,7 @@ require 'logger'
 require 'hashugar'
 
 module Colore
+  # The name of the 'current' version
   CURRENT = 'current'
 
   class Client
@@ -107,12 +108,12 @@ module Colore
     # @param doc_id [String] the document's unique identifier
     # @param filename [String] the name of the file to convert
     # @param version [String] the version to store (if not specified, will be [CURRENT]
-    # @param formats [Array] a list of optional conversions to perform once the
+    # @param format [String] the conversion to perform
     # @param callback_url [String] an optional callback URL that Colore will send the
     #        results of its conversion to. It is your responsibility to
     #        have something listening on this URL, ready to take a JSON object with the
     #        results of the conversion in it.
-    # @returns [Hash] a standard response
+    # @return [Hash] a standard response
     def request_new_format( doc_id:, version:CURRENT, filename:, format:, callback_url:nil )
       params = {}
       params[:callback_url] = callback_url if callback_url
@@ -123,7 +124,7 @@ module Colore
 
     # Completely deletes a document
     # @param doc_id [String] the document's unique identifier
-    # @returns [Hash] a standard response
+    # @return [Hash] a standard response
     def delete_document( doc_id: )
       params = {}
       params[:backtrace] = @backtrace if @backtrace
@@ -133,7 +134,7 @@ module Colore
     # Completely deletes a document's version (you cannot delete the current one)
     # @param doc_id [String] the document's unique identifier
     # @param version [String] the version to delete
-    # @returns [Hash] a standard response
+    # @return [Hash] a standard response
     def delete_version( doc_id:, version: )
       params = {}
       params[:backtrace] = @backtrace if @backtrace
@@ -146,7 +147,7 @@ module Colore
     # @param doc_id [String] the document's unique identifier
     # @param version [String] the version to delete
     # @param filename [String] the name of the file to retrieve
-    # @returns [String] the file contents
+    # @return [String] the file contents
     def get_document( doc_id:, version:CURRENT, filename: )
       params = {}
       params[:backtrace] = @backtrace if @backtrace
@@ -155,9 +156,7 @@ module Colore
 
     # Retrieves information about a document.
     # @param doc_id [String] the document's unique identifier
-    # @param version [String] the version to delete
-    # @param filename [String] the name of the file to retrieve
-    # @returns [Hash] a list of document details
+    # @return [Hash] a list of document details
     def get_document_info( doc_id: )
       params = {}
       params[:backtrace] = @backtrace if @backtrace
