@@ -29,7 +29,7 @@ And then execute:
       doc_id:       doc_id,
       filename:     file.path,
       content:      content
-      formats:      ['ocr'],
+      actions:      ['ocr'],
       callback_url: conversion_callback )
     puts resp.path
     
@@ -39,8 +39,8 @@ And then execute:
 
 ## Available Methods
 
-    client.create_document doc_id:, filename:, content:, title:, formats:[], callback_url
-    client.update_document doc_id:, version:, filename:, content:, title:, formats:[], callback_url:
+    client.create_document doc_id:, filename:, content:, title:, actions:[], callback_url
+    client.update_document doc_id:, version:, filename:, content:, title:, actions:[], callback_url:
     client.request_new_format doc_id:, version:, filename:, format: callback_url:
     client.delete_document doc_id:
     client.delete_version doc_id:, version:
