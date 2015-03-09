@@ -76,4 +76,3 @@ This can also be set at any time:
 
 ```ruby
 client.logger = Logger.new(STDERR)
-end
