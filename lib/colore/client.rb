@@ -198,7 +198,8 @@ module Colore
     end
 
     def send_request type, path, params={}, expect=:binary
-      url = "#{@base_uri}#{path}"
+      slash = @base_uri.end_with?('/') ? '' : '/'
+      url = "#{@base_uri}#{slash}#{path}"
       logger.debug( "Send #{type}: #{url}" )
       logger.debug( "  params: #{params.inspect}" )
       response = nil
