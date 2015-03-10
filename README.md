@@ -1,9 +1,14 @@
 # Colore::Client
 
+[![Build Status](https://travis-ci.org/ifad/colore-client.svg)](https://travis-ci.org/ifad/colore-client)
+[![Inline docs](http://inch-ci.org/github/ifad/colore-client.svg?branch=master)](http://inch-ci.org/github/ifad/colore-client)
+[![Code Climate](https://codeclimate.com/github/ifad/colore-client/badges/gpa.svg)](https://codeclimate.com/github/ifad/colore-client)
+
+![Color Wheel](http://upload.wikimedia.org/wikipedia/commons/thumb/3/38/BYR_color_wheel.svg/480px-BYR_color_wheel.svg.png)
+
 A ruby client for the [Colore](http://github.com/ifad/colore) document storage
 and conversion service. See the Colore documentation for a more detailed
 description of what Colore does and its API methods.
-
 
 ## Installation
 
@@ -76,3 +81,4 @@ This can also be set at any time:
 
 ```ruby
 client.logger = Logger.new(STDERR)
+```
