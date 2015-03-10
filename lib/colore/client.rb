@@ -35,7 +35,7 @@ module Colore
       self.class.generate_doc_id
     end
 
-    # Tests the connection with Colore. Will raise an error if the connection cannot be 
+    # Tests the connection with Colore. Will raise an error if the connection cannot be
     # established.
     def ping
       response, body = send_request :get, '', :binary
@@ -184,7 +184,7 @@ module Colore
         params[:backtrace] = @backtrace if @backtrace
         response  = send_request :post, "convert", params, :binary
       end
-      response 
+      response
     end
 
     protected
@@ -205,7 +205,7 @@ module Colore
       response = nil
       case type
         when :get
-          response = RestClient.get url 
+          response = RestClient.get url
         else
           response = RestClient.send type.to_sym, url , params
       end
