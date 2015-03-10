@@ -7,4 +7,4 @@ before_install:
   - sudo apt-get install -qq libmagic-dev
 
 script:
-  - bundle exec rake
+  - bundle exec rspec
