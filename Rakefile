@@ -1,24 +1,12 @@
-# encoding: utf-8
+# Bundler
+require 'bundler/setup'
 
-require 'bundler'
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
-
-require 'rake'
-
-require 'rspec/core'
+# RSpec
 require 'rspec/core/rake_task'
-RSpec::Core::RakeTask.new(:spec) do |spec|
-  spec.pattern = FileList['spec/**/*_spec.rb']
-end
+RSpec::Core::RakeTask.new
 
-task :default => :spec
-
+# YARD
 require 'yard'
 YARD::Rake::YardocTask.new
 
+task :default => [:spec, :yard]
