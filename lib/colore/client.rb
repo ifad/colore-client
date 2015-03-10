@@ -212,6 +212,8 @@ module Colore
       logger.debug( "  received : #{response}")
       return JSON.parse(response).to_hashugar if expect == :json
       return response
+    rescue Errno::ECONNREFUSED
+      raise Errors::ColoreUnavailable.new
     rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::Conflict => e
       logger.debug( "  received #{e.class.name}: #{e.message}")
       error = nil

@@ -1,5 +1,10 @@
 module Colore
   module Errors
+    class ColoreUnavailable < StandardError
+      def initialize
+        super "The Colore storage system is unavailable"
+      end
+    end
     class APIError < StandardError
       attr_accessor :http_code
       attr_accessor :response_body

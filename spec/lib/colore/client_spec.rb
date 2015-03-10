@@ -25,6 +25,11 @@ describe Colore::Client, :vcr do
       client2 = described_class.new app: 'client_test', base_uri: 'foo'
       expect{client2.ping}.to raise_error
     end
+
+    it 'raises ColoreUnavailable on ECONNREFUSED' do
+      expect(RestClient).to receive(:get) { raise Errno::ECONNREFUSED.new }
+      expect{client.ping}.to raise_error(Colore::Errors::ColoreUnavailable)
+    end
   end
 
   context '#create_document' do
