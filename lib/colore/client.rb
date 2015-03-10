@@ -218,9 +218,9 @@ module Colore
       logger.debug( "  received #{e.class.name}: #{e.message}")
       error = nil
       begin
-        error = Errors.from JSON.parse(e.http_body), e.http_body
+        error = Colore::Errors.from JSON.parse(e.http_body), e.http_body
       rescue StandardError => ex
-        error = Errors.from nil, e.http_body
+        error = Colore::Errors.from nil, e.http_body
       end
       raise error
     end
