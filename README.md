@@ -66,7 +66,7 @@ client.get_document_info doc_id:
 client.convert content:, format:, language:
 ```
 
-See the YARD doc for more details
+See the [YARD doc](http://www.rubydoc.info/github/ifad/colore-client) for more details
 
 
 ## Logging
