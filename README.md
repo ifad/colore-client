@@ -42,7 +42,8 @@ conversion_callback = 'http:/localhost:10000/foo' # you should have a listener o
 resp = client.create_document(
   doc_id:       doc_id,
   filename:     file.path,
-  content:      content
+  content:      content,
+  author:       'mrbloggs',
   actions:      ['ocr'],
   callback_url: conversion_callback )
 puts resp.path
@@ -56,8 +57,8 @@ File.open( 'foo.pdf', 'wb' ) { |f| f.write(pdf) }
 ## Available Methods
 
 ```ruby
-client.create_document doc_id:, filename:, content:, title:, actions:[], callback_url
-client.update_document doc_id:, version:, filename:, content:, title:, actions:[], callback_url:
+client.create_document doc_id:, filename:, content:, title:, author:, actions:[], callback_url
+client.update_document doc_id:, version:, filename:, content:, title:, author:, actions:[], callback_url:
 client.request_new_format doc_id:, version:, filename:, format: callback_url:
 client.delete_document doc_id:
 client.delete_version doc_id:, version:
