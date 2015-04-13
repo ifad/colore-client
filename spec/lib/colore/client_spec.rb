@@ -40,6 +40,7 @@ describe Colore::Client, :vcr do
         filename: filename,
         content: File.read(filename),
         title: 'Sample document',
+        author: 'spliffy',
         actions: [ 'ocr' ],
         callback_url: nil )
       expect(rsp).to_not be_nil
@@ -55,6 +56,7 @@ describe Colore::Client, :vcr do
         filename: filename,
         content: File.read(filename),
         title: 'Sample document',
+        author: 'spliffy',
         actions: [ 'ocr' ],
         callback_url: nil )
       expect {
@@ -75,10 +77,12 @@ describe Colore::Client, :vcr do
       client.create_document(
         doc_id: doc_id,
         filename: filename,
+        author: 'spliffy',
         content: File.read(filename) )
       rsp = client.update_document(
         doc_id: doc_id,
         filename: filename,
+        author: 'spliffy',
         content: File.read(filename)
       )
       expect(rsp.status).to eq 201
@@ -91,6 +95,7 @@ describe Colore::Client, :vcr do
         client.update_document(
           doc_id: 'foo',
           filename: filename,
+          author: 'spliffy',
           content: File.read(filename)
         ) }.to raise_error
     end
