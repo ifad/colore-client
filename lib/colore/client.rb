@@ -3,7 +3,6 @@ require 'tempfile'
 require 'rest_client'
 require 'securerandom'
 require 'logger'
-require 'hashugar'
 
 module Colore
   # The name of the 'current' version
@@ -217,7 +216,7 @@ module Colore
           response = RestClient.send type.to_sym, url , params
       end
       logger.debug( "  received : #{response}")
-      return JSON.parse(response).to_hashugar if expect == :json
+      return JSON.parse(response) if expect == :json
       return response
     rescue Errno::ECONNREFUSED
       raise Errors::ColoreUnavailable.new
