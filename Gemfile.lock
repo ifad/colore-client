@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    colore-client (0.1.0)
+    colore-client (0.1.1)
       hashugar (>= 1.0.0)
       rest-client (>= 1.7.2)
 
@@ -19,12 +19,17 @@ GEM
     debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
+    domain_name (0.5.23)
+      unf (>= 0.0.5, < 1.0.0)
     hashugar (1.0.0)
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
     mime-types (2.4.3)
     multi_json (1.10.1)
-    netrc (0.10.2)
+    netrc (0.10.3)
     rake (10.4.2)
-    rest-client (1.7.2)
+    rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
     rspec (3.2.0)
@@ -48,6 +53,9 @@ GEM
       simplecov-html (~> 0.8.0)
     simplecov-html (0.8.0)
     slop (3.6.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.6)
     vcr (2.9.3)
     webmock (1.20.4)
       addressable (>= 2.3.6)

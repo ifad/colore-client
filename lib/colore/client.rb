@@ -65,6 +65,7 @@ module Colore
       base_filename = File.basename(filename)
       response = nil
       Tempfile.open( 'colore' ) do |tf|
+        tf.binmode
         tf.write content
         tf.close
         params[:file] = File.new(tf)
@@ -95,6 +96,7 @@ module Colore
       response = nil
       if content
         Tempfile.open( 'colore' ) do |tf|
+          tf.binmode
           tf.write content
           tf.close
           params[:file] = File.new(tf)
@@ -180,6 +182,7 @@ module Colore
       params = {}
       response = nil
       Tempfile.open( 'colore' ) do |tf|
+        tf.binmode
         tf.write(content)
         tf.close
         params[:file] = File.new(tf)

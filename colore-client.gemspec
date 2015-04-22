@@ -1,6 +1,6 @@
 Gem::Specification.new do |gem|
   gem.name           = 'colore-client'
-  gem.version        = '0.1.1'
+  gem.version        = '0.1.2'
   gem.authors        = [ 'Joe Blackman' ]
   gem.email          = [ 'j.blackman@ifad.org' ]
   gem.description    = %q(Ruby client to consume Colore services)
