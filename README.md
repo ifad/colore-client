@@ -49,7 +49,7 @@ resp = client.create_document(
 puts resp.path
 
 # Convert a file on the fly
-pdf = client.convert content: file.read, format: 'ocr'
+pdf = client.convert content: file.read, action: 'ocr'
 File.open( 'foo.pdf', 'wb' ) { |f| f.write(pdf) }
 ```
 
@@ -64,7 +64,7 @@ client.delete_document doc_id:
 client.delete_version doc_id:, version:
 client.get_document doc_id:, version:, filename:
 client.get_document_info doc_id:
-client.convert content:, format:, language:
+client.convert content:, action:, language:
 ```
 
 See the [YARD doc](http://www.rubydoc.info/github/ifad/colore-client) for more details
