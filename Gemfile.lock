@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    colore-client (0.1.3)
+    colore-client (0.1.4)
       hashugar (>= 1.0.0)
       rest-client (>= 1.7.2)
 
@@ -24,7 +24,7 @@ GEM
     hashugar (1.0.0)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
-    mime-types (2.4.3)
+    mime-types (2.6.1)
     multi_json (1.10.1)
     netrc (0.10.3)
     rake (10.4.2)

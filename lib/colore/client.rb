@@ -44,7 +44,7 @@ module Colore
     # Stores the specified document on Colore
     # @param doc_id [String] the document's unique identifier
     # @param filename [String] the name of the file to store
-    # @param content [String] the body of the file (e.g. from [File#read])
+    # @param content [String or IO] the body of the file
     # @param title [String] An optional short description of the document
     # @param author [String] An optional name of the author of the document
     # @param actions [Array] a list of optional conversions to perform once the
@@ -63,11 +63,8 @@ module Colore
 
       base_filename = File.basename(filename)
       response = nil
-      Tempfile.open( 'colore' ) do |tf|
-        tf.binmode
-        tf.write content
-        tf.close
-        params[:file] = File.new(tf)
+      with_tempfile(content) do |io|
+        params[:file] = io
         response = send_request :put, "#{url_for_base doc_id}/#{base_filename}", params, :json
       end
       response
@@ -76,7 +73,7 @@ module Colore
     # Updates the specified document on Colore - creates a new version and stores the new file.
     # @param doc_id [String] the document's unique identifier
     # @param filename [String] the name of the file to store
-    # @param content [String] the body of the file (e.g. from [File#read])
+    # @param content [String or IO] the body of the file
     # @param author [String] An optional name of the author of the new version
     # @param actions [Array] a list of optional conversions to perform once the
     #        file has been stored (e.g. ['ocr', 'ocr_text']
@@ -94,11 +91,8 @@ module Colore
       base_filename = File.basename(filename)
       response = nil
       if content
-        Tempfile.open( 'colore' ) do |tf|
-          tf.binmode
-          tf.write content
-          tf.close
-          params[:file] = File.new(tf)
+        with_tempfile(content) do |io|
+          params[:file] = io
           response = send_request :post, "document/#{@app}/#{doc_id}/#{base_filename}", params, :json
         end
       else
@@ -180,11 +174,8 @@ module Colore
     def convert( content:, action:, language:'en' )
       params = {}
       response = nil
-      Tempfile.open( 'colore' ) do |tf|
-        tf.binmode
-        tf.write(content)
-        tf.close
-        params[:file] = File.new(tf)
+      with_tempfile(content) do |io|
+        params[:file] = io
         params[:action] = action
         params[:language] = language if language
         params[:backtrace] = @backtrace if @backtrace
@@ -229,6 +220,24 @@ module Colore
         error = Colore::Errors.from nil, e.http_body
       end
       raise error
+    end
+
+    #
+    # Saves the content into a tempfile, rather than trying to read it all into memory
+    # This allows us to handle passing an IO for a 300MB file without crashing.
+    # RestClient needs a file for uploads.
+    #
+    def with_tempfile content, &block
+      Tempfile.open( 'colore' ) do |tf|
+        tf.binmode
+        if content.respond_to?(:read)
+          IO.copy_stream(content,tf)
+        else
+          tf.write content
+        end
+        tf.close
+        yield File.new(tf)
+      end
     end
   end
 end

@@ -44,9 +44,9 @@ describe Colore::Client, :vcr do
         actions: [ 'ocr' ],
         callback_url: nil )
       expect(rsp).to_not be_nil
-      expect(rsp.status).to eq 201
-      expect(rsp.description.to_s).to_not eq ''
-      expect(rsp.path.to_s).to_not eq ''
+      expect(rsp['status']).to eq 201
+      expect(rsp['description'].to_s).to_not eq ''
+      expect(rsp['path'].to_s).to_not eq ''
     end
 
     it 'fails if document exists' do
@@ -85,9 +85,9 @@ describe Colore::Client, :vcr do
         author: 'spliffy',
         content: File.read(filename)
       )
-      expect(rsp.status).to eq 201
-      expect(rsp.description.to_s).to_not eq ''
-      expect(rsp.path.to_s).to_not eq ''
+      expect(rsp['status']).to eq 201
+      expect(rsp['description'].to_s).to_not eq ''
+      expect(rsp['path'].to_s).to_not eq ''
     end
 
     it 'fails on an invalid doc_id' do
@@ -109,8 +109,8 @@ describe Colore::Client, :vcr do
         filename: filename,
         content: File.read(filename) )
       rsp = client.update_title( doc_id: doc_id, title: 'This is a new title' )
-      expect(rsp.status).to eq 200
-      expect(rsp.description.to_s).to_not eq ''
+      expect(rsp['status']).to eq 200
+      expect(rsp['description'].to_s).to_not eq ''
     end
 
     it 'fails on an invalid doc_id' do
@@ -134,8 +134,8 @@ describe Colore::Client, :vcr do
         filename: filename,
         action: 'ocr'
       )
-      expect(rsp.status).to eq 202
-      expect(rsp.description.to_s).to_not eq ''
+      expect(rsp['status']).to eq 202
+      expect(rsp['description'].to_s).to_not eq ''
     end
   end
 
@@ -148,8 +148,8 @@ describe Colore::Client, :vcr do
         content: File.read(filename),
         title: 'Sample document' )
       rsp = client.delete_document( doc_id: doc_id)
-      expect(rsp.status).to eq 200
-      expect(rsp.description.to_s).to_not eq ''
+      expect(rsp['status']).to eq 200
+      expect(rsp['description'].to_s).to_not eq ''
     end
   end
 
@@ -167,8 +167,8 @@ describe Colore::Client, :vcr do
         content: File.read(filename)
       )
       rsp = client.delete_version( doc_id: doc_id, version: 'v001')
-      expect(rsp.status).to eq 200
-      expect(rsp.description.to_s).to_not eq ''
+      expect(rsp['status']).to eq 200
+      expect(rsp['description'].to_s).to_not eq ''
     end
 
     it 'refuses to delete the current version' do
@@ -219,11 +219,11 @@ describe Colore::Client, :vcr do
         content: File.read(filename),
         title: 'Sample document' )
       rsp = client.get_document_info doc_id: doc_id
-      expect(rsp.status).to eq 200
-      expect(rsp.description.to_s).to_not eq ''
-      expect(rsp.current_version).to eq 'v001'
-      expect(rsp.versions).to_not be_nil
-      expect(rsp.title).to eq 'Sample document'
+      expect(rsp['status']).to eq 200
+      expect(rsp['description'].to_s).to_not eq ''
+      expect(rsp['current_version']).to eq 'v001'
+      expect(rsp['versions']).to_not be_nil
+      expect(rsp['title']).to eq 'Sample document'
     end
 
     it 'raises error if the file does not exist' do
