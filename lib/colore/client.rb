@@ -204,11 +204,15 @@ module Colore
         when :get
           response = RestClient.get url
         else
-          response = RestClient.send type.to_sym, url , params
+          response = RestClient.send type.to_sym, url, params
       end
-      logger.debug( "  received : #{response}")
-      return JSON.parse(response) if expect == :json
-      return response
+      if expect == :json
+        logger.debug( "  received : #{response}")
+        return JSON.parse(response)
+      else
+        logger.debug( "  received : [BINARY #{response.size} bytes]")
+        return response
+      end
     rescue Errno::ECONNREFUSED
       raise Errors::ColoreUnavailable.new
     rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::Conflict => e
