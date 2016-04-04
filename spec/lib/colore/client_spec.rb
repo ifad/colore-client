@@ -247,4 +247,25 @@ describe Colore::Client, :vcr do
       }.to raise_error
     end
   end
+
+  context '#path_for' do
+    let(:doc_id) { 'test_doc_1' }
+
+    it "returns the document path" do
+      url = client.path_for(
+        doc_id,
+        filename
+      )
+      expect(url).to eq "/document/client_test/test_doc_1/current/quickfox.jpg"
+    end
+
+    it "returns the document path for a version" do
+      url = client.path_for(
+        doc_id,
+        filename,
+        'v001'
+      )
+      expect(url).to eq "/document/client_test/test_doc_1/v001/quickfox.jpg"
+    end
+  end
 end

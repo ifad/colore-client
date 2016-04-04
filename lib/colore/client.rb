@@ -123,7 +123,7 @@ module Colore
       params[:callback_url] = callback_url if callback_url
       params[:backtrace] = @backtrace if @backtrace
 
-      send_request :post, "#{url_for doc_id, version, filename}/#{action}", params, :json
+      send_request :post, "#{path_for(doc_id, filename, version)}/#{action}", params, :json
     end
 
     # Completely deletes a document
@@ -155,7 +155,7 @@ module Colore
     def get_document( doc_id:, version:CURRENT, filename: )
       params = {}
       params[:backtrace] = @backtrace if @backtrace
-      send_request :get, url_for(doc_id,version,filename), {}, :binary
+      send_request :get, path_for(doc_id, filename, version), {}, :binary
     end
 
     # Retrieves information about a document.
@@ -184,19 +184,18 @@ module Colore
       response
     end
 
-    protected
-
-    def url_for_base doc_id
-      "document/#{@app}/#{doc_id}"
-    end
-
-    def url_for doc_id, version, filename
+    def path_for(doc_id, filename, version = 'current')
       "#{url_for_base doc_id}/#{version}/#{File.basename(filename)}"
     end
 
+    protected
+
+    def url_for_base doc_id
+      "/document/#{@app}/#{doc_id}"
+    end
+
     def send_request type, path, params={}, expect=:binary
-      slash = @base_uri.end_with?('/') ? '' : '/'
-      url = "#{@base_uri}#{slash}#{path}"
+      url = URI.join(@base_uri, path).to_s
       logger.debug( "Send #{type}: #{url}" )
       logger.debug( "  params: #{params.inspect}" )
       response = nil
