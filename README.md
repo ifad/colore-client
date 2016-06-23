@@ -59,7 +59,7 @@ File.open( 'foo.pdf', 'wb' ) { |f| f.write(pdf) }
 ```ruby
 client.create_document doc_id:, filename:, content:, title:, author:, actions:[], callback_url
 client.update_document doc_id:, version:, filename:, content:, title:, author:, actions:[], callback_url:
-client.request_new_format doc_id:, version:, filename:, format: callback_url:
+client.request_conversion doc_id:, version:, filename:, action: callback_url:
 client.delete_document doc_id:
 client.delete_version doc_id:, version:
 client.get_document doc_id:, version:, filename:
