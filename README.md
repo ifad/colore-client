@@ -44,12 +44,12 @@ resp = client.create_document(
   filename:     file.path,
   content:      content,
   author:       'mrbloggs',
-  actions:      ['ocr'],
+  actions:      ['pdf'],
   callback_url: conversion_callback )
 puts resp.path
 
 # Convert a file on the fly
-pdf = client.convert content: file.read, action: 'ocr'
+pdf = client.convert content: file.read, action: 'pdf'
 File.open( 'foo.pdf', 'wb' ) { |f| f.write(pdf) }
 ```
 
