@@ -54,7 +54,7 @@ module Colore
     #        have something listening on this URL, ready to take a JSON object with the
     #        results of the conversion in it.
     # @param ephemeral [Boolean] marks the document as ephemeral. Won't be stored indefinitely
-    def create_document( doc_id:, filename:, content:, title:nil, author:nil, actions:nil, callback_url:nil, ephemeral:false)
+    def create_document( doc_id:, filename:, content:, title:nil, author:nil, actions:nil, callback_url:nil, ephemeral:false )
       params = {}
       params[:title] = title if title
       params[:actions] = actions if actions
