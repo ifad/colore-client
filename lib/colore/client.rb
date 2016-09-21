@@ -53,12 +53,14 @@ module Colore
     #        results of its conversions to (one per action). It is your responsibility to
     #        have something listening on this URL, ready to take a JSON object with the
     #        results of the conversion in it.
-    def create_document( doc_id:, filename:, content:, title:nil, author: nil, actions:nil, callback_url:nil )
+    # @param ephemeral [Boolean] marks the document as ephemeral. Won't be stored indefinitely
+    def create_document( doc_id:, filename:, content:, title:nil, author:nil, actions:nil, callback_url:nil, ephemeral:false )
       params = {}
       params[:title] = title if title
       params[:actions] = actions if actions
       params[:author] = author if author
       params[:callback_url] = callback_url if callback_url
+      params[:ephemeral] = ephemeral if ephemeral
       params[:backtrace] = @backtrace if @backtrace
 
       base_filename = File.basename(filename)
