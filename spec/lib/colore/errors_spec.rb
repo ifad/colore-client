@@ -16,7 +16,7 @@ describe Colore::Errors do
       expect(described_class.from hash_400, 'foo').to be_a described_class::ClientError
     end
 
-    it 'handle 500 error' do
+    it 'handles 500 error' do
       expect(described_class.from hash_500, 'foo').to be_a described_class::ServerError
     end
   end

@@ -1,2 +1,5 @@
+.byebug_history
+.yardoc
 coverage
 doc
+Gemfile.lock

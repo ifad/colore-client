@@ -1,12 +1,12 @@
 # Colore::Client
 
-[![Build Status](https://travis-ci.org/ifad/colore-client.svg)](https://travis-ci.org/ifad/colore-client)
-[![Inline docs](http://inch-ci.org/github/ifad/colore-client.svg?branch=master)](http://inch-ci.org/github/ifad/colore-client)
+[![Ruby specs](https://github.com/ifad/colore-client/actions/workflows/ruby.yml/badge.svg)](https://github.com/ifad/colore-client/actions/workflows/ruby.yml)
+[![Inline docs](https://inch-ci.org/github/ifad/colore-client.svg?branch=master)](https://inch-ci.org/github/ifad/colore-client)
 [![Code Climate](https://codeclimate.com/github/ifad/colore-client/badges/gpa.svg)](https://codeclimate.com/github/ifad/colore-client)
 
-![Color Wheel](http://upload.wikimedia.org/wikipedia/commons/thumb/3/38/BYR_color_wheel.svg/480px-BYR_color_wheel.svg.png)
+![Color Wheel](https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/BYR_color_wheel.svg/480px-BYR_color_wheel.svg.png)
 
-A ruby client for the [Colore](http://github.com/ifad/colore) document storage
+A ruby client for the [Colore](https://github.com/ifad/colore) document storage
 and conversion service. See the Colore documentation for a more detailed
 description of what Colore does and its API methods.
 
@@ -67,7 +67,7 @@ client.get_document_info doc_id:
 client.convert content:, action:, language:
 ```
 
-See the [YARD doc](http://www.rubydoc.info/github/ifad/colore-client) for more details
+See the [YARD doc](https://www.rubydoc.info/github/ifad/colore-client) for more details
 
 
 ## Logging
