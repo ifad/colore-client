@@ -23,7 +23,7 @@ describe Colore::Client, :vcr do
 
     it 'raises error on failure' do
       client2 = described_class.new app: 'client_test', base_uri: 'foo'
-      expect{client2.ping}.to raise_error
+      expect{client2.ping}.to raise_error URI::BadURIError
     end
 
     it 'raises ColoreUnavailable on ECONNREFUSED' do
@@ -61,13 +61,13 @@ describe Colore::Client, :vcr do
         callback_url: nil )
       expect {
         client.create_document(
-          doc_id: doc_id_2,
+          doc_id: doc_id,
           filename: filename,
           content: File.read(filename),
           title: 'Sample document',
           actions: [ 'ocr' ],
           callback_url: nil )
-      }.to raise_error
+      }.to raise_error Colore::Errors::ClientError, 'A document with this doc_id already exists'
     end
   end
 
@@ -97,7 +97,7 @@ describe Colore::Client, :vcr do
           filename: filename,
           author: 'spliffy',
           content: File.read(filename)
-        ) }.to raise_error
+        ) }.to raise_error Colore::Errors::ClientError, 'Document not found'
     end
   end
 
@@ -115,8 +115,8 @@ describe Colore::Client, :vcr do
 
     it 'fails on an invalid doc_id' do
       expect{
-        client.update_document( doc_id: 'foo', title: 'foo' )
-      }.to raise_error
+        client.update_title( doc_id: 'foo', title: 'foo' )
+      }.to raise_error Colore::Errors::ClientError, 'Document not found'
     end
   end
 
@@ -185,7 +185,7 @@ describe Colore::Client, :vcr do
       )
       expect{
         client.delete_version( doc_id: doc_id, version: 'v002')
-      }.to raise_error
+      }.to raise_error Colore::Errors::ClientError, 'Version is current, change current version first'
     end
   end
 
@@ -206,7 +206,7 @@ describe Colore::Client, :vcr do
     it 'raises error if the file does not exist' do
       expect{
         client.get_document doc_id: 'foo', version: Colore::CURRENT, filename: filename
-      }.to raise_error
+      }.to raise_error Colore::Errors::ClientError, 'Document not found'
     end
   end
 
@@ -229,7 +229,7 @@ describe Colore::Client, :vcr do
     it 'raises error if the file does not exist' do
       expect{
         client.get_document_info doc_id: 'foo'
-      }.to raise_error
+      }.to raise_error Colore::Errors::ClientError, 'Document not found'
     end
   end
 
@@ -244,7 +244,7 @@ describe Colore::Client, :vcr do
     it 'fails on invalid action' do
       expect{
         client.convert content: File.read(filename), action: 'foobar'
-      }.to raise_error
+      }.to raise_error Colore::Errors::ClientError, "No task found for action: 'foobar', mime_type: 'image/jpeg; charset=binary'"
     end
   end
 
