@@ -23,12 +23,12 @@ describe Colore::Client, :vcr do
 
     it 'raises error on failure' do
       client2 = described_class.new app: 'client_test', base_uri: 'foo'
-      expect{client2.ping}.to raise_error URI::BadURIError
+      expect { client2.ping }.to raise_error URI::BadURIError
     end
 
     it 'raises ColoreUnavailable on ECONNREFUSED' do
       expect(client.send(:connection)).to receive(:get) { raise Faraday::ConnectionFailed }
-      expect{client.ping}.to raise_error(Colore::Errors::ColoreUnavailable)
+      expect { client.ping }.to raise_error(Colore::Errors::ColoreUnavailable)
     end
   end
 
@@ -41,8 +41,8 @@ describe Colore::Client, :vcr do
         content: File.read(filename),
         title: 'Sample document',
         author: 'spliffy',
-        actions: [ 'ocr' ],
-        callback_url: nil )
+        actions: ['ocr'],
+        callback_url: nil)
       expect(rsp).to_not be_nil
       expect(rsp['status']).to eq 201
       expect(rsp['description'].to_s).to_not eq ''
@@ -57,16 +57,16 @@ describe Colore::Client, :vcr do
         content: File.read(filename),
         title: 'Sample document',
         author: 'spliffy',
-        actions: [ 'ocr' ],
-        callback_url: nil )
+        actions: ['ocr'],
+        callback_url: nil)
       expect {
         client.create_document(
           doc_id: doc_id,
           filename: filename,
           content: File.read(filename),
           title: 'Sample document',
-          actions: [ 'ocr' ],
-          callback_url: nil )
+          actions: ['ocr'],
+          callback_url: nil)
       }.to raise_error Colore::Errors::ClientError, 'A document with this doc_id already exists'
     end
   end
@@ -78,7 +78,7 @@ describe Colore::Client, :vcr do
         doc_id: doc_id,
         filename: filename,
         author: 'spliffy',
-        content: File.read(filename) )
+        content: File.read(filename))
       rsp = client.update_document(
         doc_id: doc_id,
         filename: filename,
@@ -91,7 +91,7 @@ describe Colore::Client, :vcr do
     end
 
     it 'fails on an invalid doc_id' do
-      expect{
+      expect {
         client.update_document(
           doc_id: 'foo',
           filename: filename,
@@ -107,15 +107,15 @@ describe Colore::Client, :vcr do
       client.create_document(
         doc_id: doc_id,
         filename: filename,
-        content: File.read(filename) )
-      rsp = client.update_title( doc_id: doc_id, title: 'This is a new title' )
+        content: File.read(filename))
+      rsp = client.update_title(doc_id: doc_id, title: 'This is a new title')
       expect(rsp['status']).to eq 200
       expect(rsp['description'].to_s).to_not eq ''
     end
 
     it 'fails on an invalid doc_id' do
-      expect{
-        client.update_title( doc_id: 'foo', title: 'foo' )
+      expect {
+        client.update_title(doc_id: 'foo', title: 'foo')
       }.to raise_error Colore::Errors::ClientError, 'Document not found'
     end
   end
@@ -127,7 +127,7 @@ describe Colore::Client, :vcr do
         doc_id: doc_id,
         filename: filename,
         content: File.read(filename),
-        title: 'Sample document' )
+        title: 'Sample document')
       rsp = client.request_conversion(
         doc_id: doc_id,
         version: Colore::CURRENT,
@@ -146,8 +146,8 @@ describe Colore::Client, :vcr do
         doc_id: doc_id,
         filename: filename,
         content: File.read(filename),
-        title: 'Sample document' )
-      rsp = client.delete_document( doc_id: doc_id)
+        title: 'Sample document')
+      rsp = client.delete_document(doc_id: doc_id)
       expect(rsp['status']).to eq 200
       expect(rsp['description'].to_s).to_not eq ''
     end
@@ -160,13 +160,13 @@ describe Colore::Client, :vcr do
         doc_id: doc_id,
         filename: filename,
         content: File.read(filename),
-        title: 'Sample document' )
+        title: 'Sample document')
       client.update_document(
         doc_id: doc_id,
         filename: filename,
         content: File.read(filename)
       )
-      rsp = client.delete_version( doc_id: doc_id, version: 'v001')
+      rsp = client.delete_version(doc_id: doc_id, version: 'v001')
       expect(rsp['status']).to eq 200
       expect(rsp['description'].to_s).to_not eq ''
     end
@@ -177,14 +177,14 @@ describe Colore::Client, :vcr do
         doc_id: doc_id,
         filename: filename,
         content: File.read(filename),
-        title: 'Sample document' )
+        title: 'Sample document')
       client.update_document(
         doc_id: doc_id,
         filename: filename,
         content: File.read(filename)
       )
-      expect{
-        client.delete_version( doc_id: doc_id, version: 'v002')
+      expect {
+        client.delete_version(doc_id: doc_id, version: 'v002')
       }.to raise_error Colore::Errors::ClientError, 'Version is current, change current version first'
     end
   end
@@ -196,7 +196,7 @@ describe Colore::Client, :vcr do
         doc_id: doc_id,
         filename: filename,
         content: File.read(filename),
-        title: 'Sample document' )
+        title: 'Sample document')
       rsp = client.get_document doc_id: doc_id, version: Colore::CURRENT, filename: filename
       expect(rsp).to be_a String
       expect(rsp).to_not eq ''
@@ -204,7 +204,7 @@ describe Colore::Client, :vcr do
     end
 
     it 'raises error if the file does not exist' do
-      expect{
+      expect {
         client.get_document doc_id: 'foo', version: Colore::CURRENT, filename: filename
       }.to raise_error Colore::Errors::ClientError, 'Document not found'
     end
@@ -217,7 +217,7 @@ describe Colore::Client, :vcr do
         doc_id: doc_id,
         filename: filename,
         content: File.read(filename),
-        title: 'Sample document' )
+        title: 'Sample document')
       rsp = client.get_document_info doc_id: doc_id
       expect(rsp['status']).to eq 200
       expect(rsp['description'].to_s).to_not eq ''
@@ -227,7 +227,7 @@ describe Colore::Client, :vcr do
     end
 
     it 'raises error if the file does not exist' do
-      expect{
+      expect {
         client.get_document_info doc_id: 'foo'
       }.to raise_error Colore::Errors::ClientError, 'Document not found'
     end
@@ -242,7 +242,7 @@ describe Colore::Client, :vcr do
     end
 
     it 'fails on invalid action' do
-      expect{
+      expect {
         client.convert content: File.read(filename), action: 'foobar'
       }.to raise_error Colore::Errors::ClientError, "No task found for action: 'foobar', mime_type: 'image/jpeg; charset=binary'"
     end
