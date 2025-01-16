@@ -1,6 +1,7 @@
 # Colore::Client
 
 [![Ruby specs](https://github.com/ifad/colore-client/actions/workflows/ruby.yml/badge.svg)](https://github.com/ifad/colore-client/actions/workflows/ruby.yml)
+[![RuboCop](https://github.com/ifad/colore-client/actions/workflows/rubocop.yml/badge.svg)](https://github.com/ifad/colore-client/actions/workflows/rubocop.yml)
 [![Inline docs](https://inch-ci.org/github/ifad/colore-client.svg?branch=master)](https://inch-ci.org/github/ifad/colore-client)
 [![Code Climate](https://codeclimate.com/github/ifad/colore-client/badges/gpa.svg)](https://codeclimate.com/github/ifad/colore-client)
 

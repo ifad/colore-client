@@ -27,7 +27,7 @@ describe Colore::Client, :vcr do
     end
 
     it 'raises ColoreUnavailable on ECONNREFUSED' do
-      expect(RestClient).to receive(:get) { raise Errno::ECONNREFUSED.new }
+      expect(client.send(:connection)).to receive(:get) { raise Faraday::ConnectionFailed }
       expect{client.ping}.to raise_error(Colore::Errors::ColoreUnavailable)
     end
   end

@@ -1,2 +1,2 @@
-require_relative 'colore/errors.rb'
-require_relative 'colore/client.rb'
+require_relative 'colore/errors'
+require_relative 'colore/client'

@@ -1,25 +1,29 @@
-Gem::Specification.new do |gem|
-  gem.name           = 'colore-client'
-  gem.version        = '0.2.0'
-  gem.authors        = [ 'Joe Blackman' ]
-  gem.email          = [ 'j.blackman@ifad.org' ]
-  gem.description    = %q(Ruby client to consume Colore services)
-  gem.summary        = %q(Ruby client to consume Colore services)
-  gem.homepage       = ''
+# frozen_string_literal: true
 
-  gem.add_dependency 'rest-client', '>=1.7.2'
-  gem.add_dependency 'hashugar', '>= 1.0.0'
+require File.expand_path('lib/colore/client/version', __dir__)
 
-  gem.add_development_dependency 'rspec',        '>= 3.2.0'
-  gem.add_development_dependency 'vcr'
-  gem.add_development_dependency 'webmock'
-  gem.add_development_dependency 'simplecov'
-  gem.add_development_dependency 'yard'
-  gem.add_development_dependency 'rake'
-  gem.add_development_dependency 'byebug'
-  gem.add_development_dependency 'ruby-filemagic'
+Gem::Specification.new do |spec|
+  spec.name           = 'colore-client'
+  spec.version        = Colore::Client::VERSION
+  spec.authors        = ['Joe Blackman']
+  spec.email          = ['j.blackman@ifad.org']
+  spec.description    = %q(Ruby client to consume Colore services)
+  spec.summary        = %q(Ruby client to consume Colore services)
 
-  gem.files          = `git ls-files`.split($/)
-  gem.test_files     = gem.files.grep %r[^(test|spec|features)]
-  gem.require_paths  = ['lib']
+  spec.homepage       = 'https://github.com/ifad/colore-client'
+  spec.license       = 'MIT'
+
+  spec.files         = Dir.glob('{LICENSE,README.md,lib/**/*.rb,bin/*}', File::FNM_DOTMATCH)
+  spec.require_paths = ['lib']
+
+  spec.metadata = {
+    'bug_tracker_uri' => 'https://github.com/ifad/colore-client/issues',
+    'homepage_uri' => 'https://github.com/ifad/colore-client',
+    'source_code_uri' => 'https://github.com/ifad/colore-client',
+    'rubygems_mfa_required' => 'true'
+  }
+
+  spec.required_ruby_version = '>= 3.0'
+
+  spec.add_dependency 'faraday', '>= 2.12'
 end

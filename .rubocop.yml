@@ -1,0 +1,30 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-packaging
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.0
+  Exclude:
+    - .git/**/*
+    - .github/**/*
+    - gemfiles/**/*
+    - node_modules/**/*
+    - tmp/**/*
+    - vendor/**/*
+
+Layout/LineLength:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+Style/ArgumentsForwarding:
+  Enabled: false
