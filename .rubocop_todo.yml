@@ -71,12 +71,6 @@ Naming/VariableNumber:
   Exclude:
     - 'spec/lib/colore/errors_spec.rb'
 
-# Offense count: 2
-# Configuration parameters: Max, AllowedIdentifiers, AllowedPatterns.
-RSpec/IndexedLet:
-  Exclude:
-    - 'spec/lib/colore/errors_spec.rb'
-
 # Offense count: 1
 # Configuration parameters: .
 # SupportedStyles: have_received, receive
