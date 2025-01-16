@@ -1,8 +1,11 @@
+require 'faraday'
 require 'json'
-require 'tempfile'
-require 'rest_client'
-require 'securerandom'
 require 'logger'
+require 'securerandom'
+require 'tempfile'
+require 'uri'
+
+require_relative 'client/version'
 
 module Colore
   # The name of the 'current' version
@@ -17,6 +20,15 @@ module Colore
       SecureRandom.uuid
     end
 
+    def self.uri_parser
+      @uri_parser ||=
+        if defined?(URI::RFC2396_PARSER)
+          URI::RFC2396_PARSER
+        else
+          URI::DEFAULT_PARSER
+        end
+    end
+
     # Constructor
     # @param base_uri [String] The base URI of the Colore service that you wish to attach to
     # @param app [String] The name of your application (all documents will be stored under this name)
@@ -27,6 +39,7 @@ module Colore
       @app = app
       @backtrace = backtrace
       @logger = logger
+      @connection = Faraday.new(headers: { 'User-Agent' => "Colore Client #{Colore::Client::VERSION} (#{app})" })
     end
 
     # Generates a document id that is reasonably guaranteed to be unique for your app
@@ -105,7 +118,7 @@ module Colore
     # @param doc_id [String] the document's unique identifier
     # @param title [String] A short description of the document
     def update_title( doc_id:, title: )
-      send_request :post, "document/#{@app}/#{doc_id}/title/#{URI.escape title}", {}, :json
+      send_request :post, "document/#{@app}/#{doc_id}/title/#{self.class.uri_parser.escape title}", {}, :json
     end
 
     # Requests a conversion of an existing document
@@ -198,37 +211,47 @@ module Colore
       url = URI.join(@base_uri, path).to_s
       logger.debug( "Send #{type}: #{url}" )
       logger.debug( "  params: #{params.inspect}" )
-      response = nil
-      case type
-        when :get
-          response = RestClient.get url
+      response =
+        if type == :get
+          connection.get(url)
         else
-          response = RestClient.send type.to_sym, url, params
+          connection.send(type.to_sym, url, params)
+        end
+
+      if response.success?
+        response_body = response.body
+
+        if expect == :json
+          logger.debug( "  received : #{response_body}")
+          return JSON.parse(response_body)
+        else
+          logger.debug( "  received : [BINARY #{response_body.bytesize} bytes]")
+          return response_body
+        end
       end
-      if expect == :json
-        logger.debug( "  received : #{response}")
-        return JSON.parse(response)
-      else
-        logger.debug( "  received : [BINARY #{response.size} bytes]")
-        return response
-      end
-    rescue Errno::ECONNREFUSED
-      raise Errors::ColoreUnavailable.new
-    rescue RestClient::InternalServerError, RestClient::BadRequest, RestClient::Conflict => e
-      logger.debug( "  received #{e.class.name}: #{e.message}")
-      error = nil
-      begin
-        error = Colore::Errors.from JSON.parse(e.http_body), e.http_body
-      rescue StandardError => ex
-        error = Colore::Errors.from nil, e.http_body
-      end
+
+      logger.debug( "  received #{response.status}: #{response.reason_phrase}")
+
+      error =
+        begin
+          Colore::Errors.from JSON.parse(response.body), response.body
+        rescue StandardError
+          Colore::Errors.from nil, response.body
+        end
+
       raise error
+
+    rescue Faraday::ConnectionFailed
+      raise Errors::ColoreUnavailable.new
     end
+
+    private
+
+    attr_reader :connection
 
     #
     # Saves the content into a tempfile, rather than trying to read it all into memory
     # This allows us to handle passing an IO for a 300MB file without crashing.
-    # RestClient needs a file for uploads.
     #
     def with_tempfile content, &block
       Tempfile.open( 'colore' ) do |tf|

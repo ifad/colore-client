@@ -29,7 +29,7 @@ REQUESTS = %w(
   request_conversion delete_document
   delete_version get_document get_document_info
   convert
- )
+)
 
 OptionParser.new do |opts|
   opts.banner = 'Usage: colore_client -r {request} [opts]'
@@ -109,7 +109,6 @@ begin
   else
     STDOUT.write resp
   end
-  
 rescue Colore::Errors::APIError => e
   puts "Received error from colore: #{e.http_code}, #{e.message}"
   pp e.rsp_backtrace if backtrace
