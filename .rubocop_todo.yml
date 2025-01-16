@@ -71,12 +71,6 @@ Naming/VariableNumber:
   Exclude:
     - 'spec/lib/colore/errors_spec.rb'
 
-# Offense count: 1
-# This cop supports unsafe autocorrection (--autocorrect-all).
-RSpec/BeEq:
-  Exclude:
-    - 'spec/lib/colore/client_spec.rb'
-
 # Offense count: 2
 # Configuration parameters: Max, AllowedIdentifiers, AllowedPatterns.
 RSpec/IndexedLet:

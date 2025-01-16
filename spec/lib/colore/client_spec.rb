@@ -18,7 +18,7 @@ describe Colore::Client, :vcr do
 
   describe '#ping' do
     it 'runs' do
-      expect(client.ping).to eq true
+      expect(client.ping).to be true
     end
 
     it 'raises error on failure' do
