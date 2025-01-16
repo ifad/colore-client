@@ -22,15 +22,6 @@ Layout/BlockEndNewline:
 
 # Offense count: 11
 # This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, IndentOneStep, IndentationWidth.
-# SupportedStyles: case, end
-Layout/CaseIndentation:
-  Exclude:
-    - 'bin/colore-client'
-    - 'lib/colore/errors.rb'
-
-# Offense count: 11
-# This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: symmetrical, new_line, same_line
 Layout/MultilineMethodCallBraceLayout:

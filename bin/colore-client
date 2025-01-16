@@ -57,51 +57,51 @@ client = Colore::Client.new base_uri: base_uri, app: app, backtrace: backtrace, 
 begin
   resp = nil
   case request
-    when 'ping'
-      resp = client.ping
-    when 'create_document'
-      resp = client.create_document(
-        doc_id: doc_id,
-        title: title,
-        filename: (File.basename(file) if file),
-        content: (File.read(file) if file),
-        actions: actions,
-        callback_url: callback_url
-      )
-    when 'update_document'
-      resp = client.update_document(
-        doc_id: doc_id,
-        filename: (File.basename(file) if file),
-        content: (File.read(file) if file),
-        actions: actions,
-        callback_url: callback_url
-      )
-    when 'update_title'
-      resp = client.update_document(doc_id: doc_id, title: title)
-    when 'request_conversion'
-      actions.each do |action|
-        resp = client.request_conversion doc_id: doc_id, version: version, filename: File.basename(file), action: action, callback_url: callback_url
-      end
-    when 'delete_document'
-      resp = client.delete_document doc_id: doc_id
-    when 'delete_version'
-      resp = client.delete_version doc_id: doc_id, version: version
-    when 'get_document'
-      resp = client.delete_document doc_id: doc_id, version: version, filename: filename
-      if output_file
-        File.open(output_file, "wb") { |f| f.write(resp) }
-        resp = nil
-      end
-    when 'get_document_info'
-      resp = client.get_document_info doc_id: doc_id
-    when 'convert'
-      resp = client.convert content: File.read(file), action: actions[0], language: language
-      if output_file
-        File.open(output_file, "wb") { |f| f.write(resp) }
-        resp = nil
-      end
-    else
-      raise "Unhandled request type: #{request}"
+  when 'ping'
+    resp = client.ping
+  when 'create_document'
+    resp = client.create_document(
+      doc_id: doc_id,
+      title: title,
+      filename: (File.basename(file) if file),
+      content: (File.read(file) if file),
+      actions: actions,
+      callback_url: callback_url
+    )
+  when 'update_document'
+    resp = client.update_document(
+      doc_id: doc_id,
+      filename: (File.basename(file) if file),
+      content: (File.read(file) if file),
+      actions: actions,
+      callback_url: callback_url
+    )
+  when 'update_title'
+    resp = client.update_document(doc_id: doc_id, title: title)
+  when 'request_conversion'
+    actions.each do |action|
+      resp = client.request_conversion doc_id: doc_id, version: version, filename: File.basename(file), action: action, callback_url: callback_url
+    end
+  when 'delete_document'
+    resp = client.delete_document doc_id: doc_id
+  when 'delete_version'
+    resp = client.delete_version doc_id: doc_id, version: version
+  when 'get_document'
+    resp = client.delete_document doc_id: doc_id, version: version, filename: filename
+    if output_file
+      File.open(output_file, "wb") { |f| f.write(resp) }
+      resp = nil
+    end
+  when 'get_document_info'
+    resp = client.get_document_info doc_id: doc_id
+  when 'convert'
+    resp = client.convert content: File.read(file), action: actions[0], language: language
+    if output_file
+      File.open(output_file, "wb") { |f| f.write(resp) }
+      resp = nil
+    end
+  else
+    raise "Unhandled request type: #{request}"
   end
 
   if resp.respond_to? :to_hash
