@@ -34,7 +34,7 @@ module Colore
     # @param app [String] The name of your application (all documents will be stored under this name)
     # @param logger [Logger] An optional logger, which will log all requests and responses
     # @param backtrace [Bool] Used for debugging purposes, to extract backtraces from Colore
-    def initialize( base_uri: 'http://localhost:9240/', app:, logger: Logger.new(nil), backtrace: false )
+    def initialize(base_uri: 'http://localhost:9240/', app:, logger: Logger.new(nil), backtrace: false)
       @base_uri = base_uri
       @app = app
       @backtrace = backtrace
@@ -66,7 +66,7 @@ module Colore
     #        results of its conversions to (one per action). It is your responsibility to
     #        have something listening on this URL, ready to take a JSON object with the
     #        results of the conversion in it.
-    def create_document( doc_id:, filename:, content:, title:nil, author: nil, actions:nil, callback_url:nil )
+    def create_document(doc_id:, filename:, content:, title: nil, author: nil, actions: nil, callback_url: nil)
       params = {}
       params[:title] = title if title
       params[:actions] = actions if actions
@@ -94,7 +94,7 @@ module Colore
     #        results of its conversions to (one per action). It is your responsibility to
     #        have something listening on this URL, ready to take a JSON object with the
     #        results of the conversion in it.
-    def update_document( doc_id:, filename:, content: nil, author: nil, actions:nil, callback_url:nil )
+    def update_document(doc_id:, filename:, content: nil, author: nil, actions: nil, callback_url: nil)
       params = {}
       params[:actions] = actions if actions
       params[:author] = author if author
@@ -117,7 +117,7 @@ module Colore
     # Updates the document title
     # @param doc_id [String] the document's unique identifier
     # @param title [String] A short description of the document
-    def update_title( doc_id:, title: )
+    def update_title(doc_id:, title:)
       send_request :post, "document/#{@app}/#{doc_id}/title/#{self.class.uri_parser.escape title}", {}, :json
     end
 
@@ -131,7 +131,7 @@ module Colore
     #        have something listening on this URL, ready to take a JSON object with the
     #        results of the conversion in it.
     # @return [Hash] a standard response
-    def request_conversion( doc_id:, version:CURRENT, filename:, action:, callback_url:nil )
+    def request_conversion(doc_id:, version: CURRENT, filename:, action:, callback_url: nil)
       params = {}
       params[:callback_url] = callback_url if callback_url
       params[:backtrace] = @backtrace if @backtrace
@@ -142,7 +142,7 @@ module Colore
     # Completely deletes a document
     # @param doc_id [String] the document's unique identifier
     # @return [Hash] a standard response
-    def delete_document( doc_id: )
+    def delete_document(doc_id:)
       params = {}
       params[:backtrace] = @backtrace if @backtrace
       send_request :delete, url_for_base(doc_id), params, :json
@@ -152,7 +152,7 @@ module Colore
     # @param doc_id [String] the document's unique identifier
     # @param version [String] the version to delete
     # @return [Hash] a standard response
-    def delete_version( doc_id:, version: )
+    def delete_version(doc_id:, version:)
       params = {}
       params[:backtrace] = @backtrace if @backtrace
       send_request :delete, "#{url_for_base doc_id}/#{version}", params, :json
@@ -165,7 +165,7 @@ module Colore
     # @param version [String] the version to delete
     # @param filename [String] the name of the file to retrieve
     # @return [String] the file contents
-    def get_document( doc_id:, version:CURRENT, filename: )
+    def get_document(doc_id:, version: CURRENT, filename:)
       params = {}
       params[:backtrace] = @backtrace if @backtrace
       send_request :get, path_for(doc_id, filename, version), {}, :binary
@@ -174,7 +174,7 @@ module Colore
     # Retrieves information about a document.
     # @param doc_id [String] the document's unique identifier
     # @return [Hash] a list of document details
-    def get_document_info( doc_id: )
+    def get_document_info(doc_id:)
       params = {}
       params[:backtrace] = @backtrace if @backtrace
       send_request :get, url_for_base(doc_id), params, :json
@@ -184,7 +184,7 @@ module Colore
     # @param content [String] the file contents
     # @param action [String] the conversion to perform
     # @param language [String] the language of the file (defaults to 'en') - only needed for OCR operations
-    def convert( content:, action:, language:'en' )
+    def convert(content:, action:, language: 'en')
       params = {}
       response = nil
       with_tempfile(content) do |io|
@@ -192,7 +192,7 @@ module Colore
         params[:action] = action
         params[:language] = language if language
         params[:backtrace] = @backtrace if @backtrace
-        response  = send_request :post, "convert", params, :binary
+        response = send_request :post, "convert", params, :binary
       end
       response
     end
@@ -207,10 +207,10 @@ module Colore
       "/document/#{@app}/#{doc_id}"
     end
 
-    def send_request type, path, params={}, expect=:binary
+    def send_request type, path, params = {}, expect = :binary
       url = URI.join(@base_uri, path).to_s
-      logger.debug( "Send #{type}: #{url}" )
-      logger.debug( "  params: #{params.inspect}" )
+      logger.debug("Send #{type}: #{url}")
+      logger.debug("  params: #{params.inspect}")
       response =
         if type == :get
           connection.get(url)
@@ -222,15 +222,15 @@ module Colore
         response_body = response.body
 
         if expect == :json
-          logger.debug( "  received : #{response_body}")
+          logger.debug("  received : #{response_body}")
           return JSON.parse(response_body)
         else
-          logger.debug( "  received : [BINARY #{response_body.bytesize} bytes]")
+          logger.debug("  received : [BINARY #{response_body.bytesize} bytes]")
           return response_body
         end
       end
 
-      logger.debug( "  received #{response.status}: #{response.reason_phrase}")
+      logger.debug("  received #{response.status}: #{response.reason_phrase}")
 
       error =
         begin
@@ -240,7 +240,6 @@ module Colore
         end
 
       raise error
-
     rescue Faraday::ConnectionFailed
       raise Errors::ColoreUnavailable.new
     end
@@ -254,10 +253,10 @@ module Colore
     # This allows us to handle passing an IO for a 300MB file without crashing.
     #
     def with_tempfile content, &block
-      Tempfile.open( 'colore' ) do |tf|
+      Tempfile.open('colore') do |tf|
         tf.binmode
         if content.respond_to?(:read)
-          IO.copy_stream(content,tf)
+          IO.copy_stream(content, tf)
         else
           tf.write content
         end

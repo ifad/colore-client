@@ -2,11 +2,12 @@ require 'spec_helper'
 
 describe Colore::Errors do
   let(:hash_400) {
-      { 'status'=>400, 'description'=>'foo', 'backtrace'=>'a backtrace' }
+      { 'status' => 400, 'description' => 'foo', 'backtrace' => 'a backtrace' }
     }
   let(:hash_500) {
-      { 'status'=>500, 'description'=>'foo', 'backtrace'=>'a backtrace' }
+      { 'status' => 500, 'description' => 'foo', 'backtrace' => 'a backtrace' }
     }
+
   context '.from' do
     it 'handles nil hash' do
       expect(described_class.from nil, 'foo').to be_a described_class::ServerError
