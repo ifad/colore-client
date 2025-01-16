@@ -8,10 +8,10 @@ SimpleCov.start
 
 SPEC_BASE = Pathname.new(__FILE__).realpath.parent
 
-$: << SPEC_BASE.parent + 'lib'
+$: << (SPEC_BASE.parent + 'lib')
 require 'colore-client'
 
-def fixture name
+def fixture(name)
   SPEC_BASE + 'fixtures' + name
 end
 
@@ -21,7 +21,7 @@ VCR.configure do |c|
   c.configure_rspec_metadata!
 end
 
-RSpec::configure do |rspec|
+RSpec.configure do |rspec|
   rspec.tty = true
   rspec.color = true
 end
