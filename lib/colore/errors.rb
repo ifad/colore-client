@@ -2,17 +2,15 @@ module Colore
   module Errors
     class ColoreUnavailable < StandardError
       def initialize
-        super "The Colore storage system is unavailable"
+        super('The Colore storage system is unavailable')
       end
     end
 
     class APIError < StandardError
-      attr_accessor :http_code
-      attr_accessor :response_body
-      attr_accessor :rsp_backtrace
+      attr_accessor :http_code, :response_body, :rsp_backtrace
 
-      def initialize http_code, message, rsp_backtrace = nil, response_body = nil
-        super message
+      def initialize(http_code, message, rsp_backtrace = nil, response_body = nil)
+        super(message)
         @http_code = http_code
         @response_body = response_body
         @rsp_backtrace = rsp_backtrace
@@ -22,7 +20,7 @@ module Colore
     class ClientError < APIError; end
     class ServerError < APIError; end
 
-    def self.from hash, body
+    def self.from(hash, body)
       if hash.nil?
         ServerError.new(0, 'Unknown error (see response_body)', nil, body)
       else

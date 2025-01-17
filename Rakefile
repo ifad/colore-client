@@ -9,4 +9,4 @@ RSpec::Core::RakeTask.new
 require 'yard'
 YARD::Rake::YardocTask.new
 
-task :default => [:spec, :yard]
+task default: %i[spec yard]
