@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage       = 'https://github.com/ifad/colore-client'
   spec.license       = 'MIT'
 
-  spec.files         = Dir.glob('{LICENSE,README.md,lib/**/*.rb,bin/*}', File::FNM_DOTMATCH)
+  spec.files         = Dir['{bin/*,lib/**/*.rb,LICENSE,README.md}']
   spec.require_paths = ['lib']
 
   spec.metadata = {
