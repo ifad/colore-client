@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Colore::Errors do
+RSpec.describe Colore::Errors do
   let(:bad_request) do
     { 'status' => 400, 'description' => 'foo', 'backtrace' => 'a backtrace' }
   end

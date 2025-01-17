@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Colore::Client, :vcr do
+RSpec.describe Colore::Client, :vcr do
   let(:client) { described_class.new app: 'client_test' }
   let(:filename) { fixture('quickfox.jpg') }
 
@@ -29,7 +29,7 @@ describe Colore::Client, :vcr do
     end
 
     it 'raises ColoreUnavailable on ECONNREFUSED' do
-      expect(client.send(:connection)).to receive(:get) { raise Faraday::ConnectionFailed }
+      allow(client.send(:connection)).to receive(:get) { raise Faraday::ConnectionFailed }
       expect { client.ping }.to raise_error(Colore::Errors::ColoreUnavailable)
     end
   end
