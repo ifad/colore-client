@@ -34,7 +34,7 @@ REQUESTS = %w[
 OptionParser.new do |opts|
   opts.banner = 'Usage: colore_client -r {request} [opts]'
   opts.on('-r', '--request NAME', REQUESTS, 'Request to perform') { |r| request = r }
-  opts.on('-u', '--base-uri', 'Base URI') { |u| base_uri = u }
+  opts.on('-u', '--base-uri BASE_URI', 'Base URI') { |u| base_uri = u }
   opts.on('-a', '--app APP', 'Application name') { |a| app = a }
   opts.on('-d', '--doc-id ID', 'Document id') { |d| doc_id = d }
   opts.on('-v', '--version VERSION', 'Version id') { |v| version = v }
@@ -89,7 +89,7 @@ begin
   when 'delete_version'
     resp = client.delete_version doc_id: doc_id, version: version
   when 'get_document'
-    resp = client.delete_document doc_id: doc_id, version: version, filename: filename
+    resp = client.get_document doc_id: doc_id, version: version, filename: File.basename(file)
     if output_file
       File.binwrite(output_file, resp)
       resp = nil
@@ -107,11 +107,11 @@ begin
   end
 
   if resp.respond_to? :to_hash
-    resp.to_hash
+    puts resp.to_hash
   else
-    write(resp)
+    puts resp
   end
 rescue Colore::Errors::APIError => e
-  puts "Received error from colore: #{e.http_code}, #{e.message}"
-  pp e.rsp_backtrace if backtrace
+  warn "Received error from Colore: #{e.http_code}, #{e.message}"
+  warn "Backtrace: #{e.rsp_backtrace.inspect}" if backtrace && e.rsp_backtrace
 end
