@@ -8,7 +8,7 @@
 
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes.
 Metrics/AbcSize:
-  Max: 35
+  Max: 34
 
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ClassLength:
@@ -37,28 +37,3 @@ Style/Documentation:
     - 'test/**/*'
     - 'lib/colore/client.rb'
     - 'lib/colore/errors.rb'
-
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - 'Rakefile'
-    - 'lib/colore-client.rb'
-    - 'lib/colore/client.rb'
-    - 'lib/colore/client/version.rb'
-    - 'lib/colore/errors.rb'
-
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: literals, strict
-Style/MutableConstant:
-  Exclude:
-    - 'lib/colore/client.rb'
-    - 'lib/colore/client/version.rb'
-
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: AllowedCompactTypes.
-# SupportedStyles: compact, exploded
-Style/RaiseArgs:
-  EnforcedStyle: compact

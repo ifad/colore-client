@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'faraday'
 require 'json'
 require 'logger'
@@ -240,7 +242,7 @@ module Colore
 
       raise error
     rescue Faraday::ConnectionFailed
-      raise Errors::ColoreUnavailable.new
+      raise Errors::ColoreUnavailable
     end
 
     private
