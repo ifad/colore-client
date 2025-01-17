@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe Colore::Client, :vcr do
-  let(:client) { described_class.new app: 'client_test' }
+  let(:client) { described_class.new app: 'client_test', base_uri: 'http://localhost:9240/' }
   let(:filename) { fixture('quickfox.jpg') }
 
   describe '.generate_doc_id' do

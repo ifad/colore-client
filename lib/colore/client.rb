@@ -39,15 +39,16 @@ module Colore
     # Constructor.
     #
     # @param base_uri [String] The base URI of the Colore service that you wish to attach to
-    # @param app [String] The name of your application (all documents will be stored under this name)
-    # @param logger [Logger] An optional logger, which will log all requests and responses
-    # @param backtrace [Bool] Used for debugging purposes, to extract backtraces from Colore
-    def initialize(app:, base_uri: 'http://localhost:9240/', logger: Logger.new(nil), backtrace: false)
+    # @param app [String] The name of your application. All documents will be stored under this name
+    # @param logger [Logger] An optional logger, which will log all requests and responses. Defaults to `Logger.new(nil)`
+    # @param backtrace [Bool] Used for debugging purposes, to extract backtraces from Colore. Defaults to `false`
+    # @param user_agent [String] User Agent header that will be sent to Colore. Defaults to `Colore Client`
+    def initialize(app:, base_uri:, logger: Logger.new(nil), backtrace: false, user_agent: 'Colore Client')
       @base_uri = base_uri
       @app = app
       @backtrace = backtrace
       @logger = logger
-      @connection = Faraday.new(headers: { 'User-Agent' => "Colore Client #{Colore::Client::VERSION} (#{app})" })
+      @connection = Faraday.new(headers: { 'User-Agent' => user_agent })
     end
 
     # Generates a document id that is reasonably guaranteed to be unique for your app.
