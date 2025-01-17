@@ -7,8 +7,8 @@ Gem::Specification.new do |spec|
   spec.version        = Colore::Client::VERSION
   spec.authors        = ['Joe Blackman']
   spec.email          = ['j.blackman@ifad.org']
-  spec.description    = %q(Ruby client to consume Colore services)
-  spec.summary        = %q(Ruby client to consume Colore services)
+  spec.description    = 'Ruby client to consume Colore services'
+  spec.summary        = 'Ruby client to consume Colore services'
 
   spec.homepage       = 'https://github.com/ifad/colore-client'
   spec.license       = 'MIT'

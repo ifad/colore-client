@@ -12,8 +12,7 @@ module Colore
   CURRENT = 'current'
 
   class Client
-    attr_accessor :backtrace
-    attr_accessor :logger
+    attr_accessor :backtrace, :logger
 
     # Generates a document id that is reasonably guaranteed to be unique for your app
     def self.generate_doc_id
@@ -34,7 +33,7 @@ module Colore
     # @param app [String] The name of your application (all documents will be stored under this name)
     # @param logger [Logger] An optional logger, which will log all requests and responses
     # @param backtrace [Bool] Used for debugging purposes, to extract backtraces from Colore
-    def initialize(base_uri: 'http://localhost:9240/', app:, logger: Logger.new(nil), backtrace: false)
+    def initialize(app:, base_uri: 'http://localhost:9240/', logger: Logger.new(nil), backtrace: false)
       @base_uri = base_uri
       @app = app
       @backtrace = backtrace
@@ -50,7 +49,7 @@ module Colore
     # Tests the connection with Colore. Will raise an error if the connection cannot be
     # established.
     def ping
-      response, body = send_request :get, '', :binary
+      send_request :get, '', :binary
       true
     end
 
@@ -131,7 +130,7 @@ module Colore
     #        have something listening on this URL, ready to take a JSON object with the
     #        results of the conversion in it.
     # @return [Hash] a standard response
-    def request_conversion(doc_id:, version: CURRENT, filename:, action:, callback_url: nil)
+    def request_conversion(doc_id:, filename:, action:, version: CURRENT, callback_url: nil)
       params = {}
       params[:callback_url] = callback_url if callback_url
       params[:backtrace] = @backtrace if @backtrace
@@ -165,7 +164,7 @@ module Colore
     # @param version [String] the version to delete
     # @param filename [String] the name of the file to retrieve
     # @return [String] the file contents
-    def get_document(doc_id:, version: CURRENT, filename:)
+    def get_document(doc_id:, filename:, version: CURRENT)
       params = {}
       params[:backtrace] = @backtrace if @backtrace
       send_request :get, path_for(doc_id, filename, version), {}, :binary
@@ -192,7 +191,7 @@ module Colore
         params[:action] = action
         params[:language] = language if language
         params[:backtrace] = @backtrace if @backtrace
-        response = send_request :post, "convert", params, :binary
+        response = send_request :post, 'convert', params, :binary
       end
       response
     end
@@ -203,11 +202,11 @@ module Colore
 
     protected
 
-    def url_for_base doc_id
+    def url_for_base(doc_id)
       "/document/#{@app}/#{doc_id}"
     end
 
-    def send_request type, path, params = {}, expect = :binary
+    def send_request(type, path, params = {}, expect = :binary)
       url = URI.join(@base_uri, path).to_s
       logger.debug("Send #{type}: #{url}")
       logger.debug("  params: #{params.inspect}")
@@ -252,7 +251,7 @@ module Colore
     # Saves the content into a tempfile, rather than trying to read it all into memory
     # This allows us to handle passing an IO for a 300MB file without crashing.
     #
-    def with_tempfile content, &block
+    def with_tempfile(content)
       Tempfile.open('colore') do |tf|
         tf.binmode
         if content.respond_to?(:read)
