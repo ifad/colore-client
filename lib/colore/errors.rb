@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Colore
   module Errors
     class ColoreUnavailable < StandardError
