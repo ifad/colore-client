@@ -76,11 +76,11 @@ See the [YARD doc](https://www.rubydoc.info/github/ifad/colore-client) for more 
 The client takes an optional Logger as an initialization parameter:
 
 ```ruby
-client = Colore::Client.new base_uri: base_uri, app: app, logger: Logger.new(STDOUT)
+client = Colore::Client.new base_uri: base_uri, app: app, logger: Logger.new($stdout)
 ```
 
 This can also be set at any time:
 
 ```ruby
-client.logger = Logger.new(STDERR)
+client.logger = Logger.new($stderr)
 ```

@@ -7,20 +7,26 @@ require 'securerandom'
 require 'tempfile'
 require 'uri'
 
-require_relative 'client/version'
-
+# The Colore module serves as the namespace for the Colore client and related classes.
 module Colore
-  # The name of the 'current' version
+  # The name of the 'current' version.
   CURRENT = 'current'
 
+  # Client for interacting with the Colore service.
   class Client
-    attr_accessor :backtrace, :logger
+    attr_reader :backtrace, :logger, :base_uri, :app
 
-    # Generates a document id that is reasonably guaranteed to be unique for your app
+    # Generates a document id that is reasonably guaranteed to be unique for your app.
     def self.generate_doc_id
       SecureRandom.uuid
     end
 
+    # Returns the URI parser based on the Ruby version.
+    #
+    # If `URI::RFC2396_PARSER` is defined, it will return that parser.
+    # Otherwise, it will return `URI::DEFAULT_PARSER`.
+    #
+    # @return [URI::Parser] the URI parser to use
     def self.uri_parser
       @uri_parser ||=
         if defined?(URI::RFC2396_PARSER)
@@ -30,7 +36,8 @@ module Colore
         end
     end
 
-    # Constructor
+    # Constructor.
+    #
     # @param base_uri [String] The base URI of the Colore service that you wish to attach to
     # @param app [String] The name of your application (all documents will be stored under this name)
     # @param logger [Logger] An optional logger, which will log all requests and responses
@@ -43,7 +50,7 @@ module Colore
       @connection = Faraday.new(headers: { 'User-Agent' => "Colore Client #{Colore::Client::VERSION} (#{app})" })
     end
 
-    # Generates a document id that is reasonably guaranteed to be unique for your app
+    # Generates a document id that is reasonably guaranteed to be unique for your app.
     def generate_doc_id
       self.class.generate_doc_id
     end
@@ -55,7 +62,8 @@ module Colore
       true
     end
 
-    # Stores the specified document on Colore
+    # Stores the specified document on Colore.
+    #
     # @param doc_id [String] the document's unique identifier
     # @param filename [String] the name of the file to store
     # @param content [String or IO] the body of the file
@@ -66,16 +74,19 @@ module Colore
     # @param callback_url [String] an optional callback URL that Colore will send the
     #        results of its conversions to (one per action). It is your responsibility to
     #        have something listening on this URL, ready to take a JSON object with the
-    #        results of the conversion in it.
+    #        results of the conversion in it
+    #
+    # @return [Hash] a standard response
     def create_document(doc_id:, filename:, content:, title: nil, author: nil, actions: nil, callback_url: nil)
       params = {}
       params[:title] = title if title
       params[:actions] = actions if actions
       params[:author] = author if author
       params[:callback_url] = callback_url if callback_url
-      params[:backtrace] = @backtrace if @backtrace
+      params[:backtrace] = backtrace if backtrace
 
       base_filename = File.basename(filename)
+
       response = nil
       with_tempfile(content) do |io|
         params[:file] = io
@@ -85,6 +96,7 @@ module Colore
     end
 
     # Updates the specified document on Colore - creates a new version and stores the new file.
+    #
     # @param doc_id [String] the document's unique identifier
     # @param filename [String] the name of the file to store
     # @param content [String or IO] the body of the file
@@ -94,35 +106,42 @@ module Colore
     # @param callback_url [String] an optional callback URL that Colore will send the
     #        results of its conversions to (one per action). It is your responsibility to
     #        have something listening on this URL, ready to take a JSON object with the
-    #        results of the conversion in it.
+    #        results of the conversion in it
+    #
+    # @return [Hash] a standard response
     def update_document(doc_id:, filename:, content: nil, author: nil, actions: nil, callback_url: nil)
       params = {}
       params[:actions] = actions if actions
       params[:author] = author if author
       params[:callback_url] = callback_url if callback_url
-      params[:backtrace] = @backtrace if @backtrace
+      params[:backtrace] = backtrace if backtrace
 
       base_filename = File.basename(filename)
+
       response = nil
       if content
         with_tempfile(content) do |io|
           params[:file] = io
-          response = send_request :post, "document/#{@app}/#{doc_id}/#{base_filename}", params, :json
+          response = send_request :post, "document/#{app}/#{doc_id}/#{base_filename}", params, :json
         end
       else
-        response = send_request :post, "document/#{@app}/#{doc_id}/#{base_filename}", params, :json
+        response = send_request :post, "document/#{app}/#{doc_id}/#{base_filename}", params, :json
       end
       response
     end
 
-    # Updates the document title
+    # Updates the document title.
+    #
     # @param doc_id [String] the document's unique identifier
     # @param title [String] A short description of the document
+    #
+    # @return [Hash] a standard response
     def update_title(doc_id:, title:)
-      send_request :post, "document/#{@app}/#{doc_id}/title/#{self.class.uri_parser.escape title}", {}, :json
+      send_request :post, "document/#{app}/#{doc_id}/title/#{self.class.uri_parser.escape title}", {}, :json
     end
 
-    # Requests a conversion of an existing document
+    # Requests a conversion of an existing document.
+    #
     # @param doc_id [String] the document's unique identifier
     # @param filename [String] the name of the file to convert
     # @param version [String] the version to store (if not specified, will be [CURRENT]
@@ -130,74 +149,95 @@ module Colore
     # @param callback_url [String] an optional callback URL that Colore will send the
     #        results of its conversion to. It is your responsibility to
     #        have something listening on this URL, ready to take a JSON object with the
-    #        results of the conversion in it.
+    #        results of the conversion in it
+    #
     # @return [Hash] a standard response
     def request_conversion(doc_id:, filename:, action:, version: CURRENT, callback_url: nil)
       params = {}
       params[:callback_url] = callback_url if callback_url
-      params[:backtrace] = @backtrace if @backtrace
+      params[:backtrace] = backtrace if backtrace
 
       send_request :post, "#{path_for(doc_id, filename, version)}/#{action}", params, :json
     end
 
     # Completely deletes a document
+    #
     # @param doc_id [String] the document's unique identifier
+    #
     # @return [Hash] a standard response
     def delete_document(doc_id:)
       params = {}
-      params[:backtrace] = @backtrace if @backtrace
+      params[:backtrace] = backtrace if backtrace
       send_request :delete, url_for_base(doc_id), params, :json
     end
 
     # Completely deletes a document's version (you cannot delete the current one)
+    #
     # @param doc_id [String] the document's unique identifier
     # @param version [String] the version to delete
+    #
     # @return [Hash] a standard response
     def delete_version(doc_id:, version:)
       params = {}
-      params[:backtrace] = @backtrace if @backtrace
+      params[:backtrace] = backtrace if backtrace
       send_request :delete, "#{url_for_base doc_id}/#{version}", params, :json
     end
 
-    # Retrieves a document. Please note that this method puts unwanted load on the Colore
-    # service and it is recommended that you access the document directly, using a proxying
+    # Retrieves a document.
+    #
+    # Please note that this method puts unwanted load on the Colore service and
+    # it is recommended that you access the document directly, using a proxying
     # web server such as Nginx.
+    #
     # @param doc_id [String] the document's unique identifier
     # @param version [String] the version to delete
     # @param filename [String] the name of the file to retrieve
+    #
     # @return [String] the file contents
     def get_document(doc_id:, filename:, version: CURRENT)
       params = {}
-      params[:backtrace] = @backtrace if @backtrace
+      params[:backtrace] = backtrace if backtrace
       send_request :get, path_for(doc_id, filename, version), {}, :binary
     end
 
     # Retrieves information about a document.
+    #
     # @param doc_id [String] the document's unique identifier
+    #
     # @return [Hash] a list of document details
     def get_document_info(doc_id:)
       params = {}
-      params[:backtrace] = @backtrace if @backtrace
+      params[:backtrace] = backtrace if backtrace
       send_request :get, url_for_base(doc_id), params, :json
     end
 
-    # Performs a foreground conversion of a file
+    # Performs a foreground conversion of a file.
+    #
     # @param content [String] the file contents
     # @param action [String] the conversion to perform
     # @param language [String] the language of the file (defaults to 'en') - only needed for OCR operations
+    #
+    # @return [Hash] a standard response
     def convert(content:, action:, language: 'en')
       params = {}
+
       response = nil
       with_tempfile(content) do |io|
         params[:file] = io
         params[:action] = action
         params[:language] = language if language
-        params[:backtrace] = @backtrace if @backtrace
+        params[:backtrace] = backtrace if backtrace
         response = send_request :post, 'convert', params, :binary
       end
       response
     end
 
+    # Generates a path for the document based on its ID, filename, and version.
+    #
+    # @param doc_id [String] the document's unique identifier
+    # @param filename [String] the name of the file
+    # @param version [String] the version of the document (defaults to 'current')
+    # @return [String] the generated path
     def path_for(doc_id, filename, version = 'current')
       "#{url_for_base doc_id}/#{version}/#{File.basename(filename)}"
     end
@@ -205,11 +245,11 @@ module Colore
     protected
 
     def url_for_base(doc_id)
-      "/document/#{@app}/#{doc_id}"
+      "/document/#{app}/#{doc_id}"
     end
 
     def send_request(type, path, params = {}, expect = :binary)
-      url = URI.join(@base_uri, path).to_s
+      url = URI.join(base_uri, path).to_s
       logger.debug("Send #{type}: #{url}")
       logger.debug("  params: #{params.inspect}")
       response =
@@ -249,10 +289,8 @@ module Colore
 
     attr_reader :connection
 
-    #
     # Saves the content into a tempfile, rather than trying to read it all into memory
     # This allows us to handle passing an IO for a 300MB file without crashing.
-    #
     def with_tempfile(content)
       Tempfile.open('colore') do |tf|
         tf.binmode

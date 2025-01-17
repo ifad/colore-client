@@ -8,7 +8,7 @@
 
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes.
 Metrics/AbcSize:
-  Max: 34
+  Max: 35
 
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ClassLength:
@@ -29,11 +29,3 @@ Naming/FileName:
   Exclude:
     - 'Rakefile.rb'
     - 'lib/colore-client.rb'
-
-# Configuration parameters: AllowedConstants.
-Style/Documentation:
-  Exclude:
-    - 'spec/**/*'
-    - 'test/**/*'
-    - 'lib/colore/client.rb'
-    - 'lib/colore/errors.rb'
