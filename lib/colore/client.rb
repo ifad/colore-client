@@ -138,7 +138,7 @@ module Colore
     #
     # @return [Hash] a standard response
     def update_title(doc_id:, title:)
-      send_request :post, "document/#{app}/#{doc_id}/title/#{self.class.uri_parser.escape title}", {}, :json
+      send_request :post, "#{url_for_base(doc_id)}/title/#{self.class.uri_parser.escape title}", {}, :json
     end
 
     # Requests a conversion of an existing document.
