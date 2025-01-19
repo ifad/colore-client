@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Colore::Client, :vcr do
+RSpec.describe Colore::Client do
   let(:client) { described_class.new app: 'client_test', base_uri: 'http://localhost:9240/' }
   let(:filename) { fixture('quickfox.jpg') }
 
@@ -18,7 +18,7 @@ RSpec.describe Colore::Client, :vcr do
     end
   end
 
-  describe '#ping' do
+  describe '#ping', :vcr do
     it 'runs' do
       expect(client.ping).to be true
     end
@@ -34,7 +34,7 @@ RSpec.describe Colore::Client, :vcr do
     end
   end
 
-  describe '#create_document' do
+  describe '#create_document', :vcr do
     it 'runs' do
       doc_id = 'test_doc_1'
       rsp = client.create_document(
@@ -76,7 +76,7 @@ RSpec.describe Colore::Client, :vcr do
     end
   end
 
-  describe '#update_document' do
+  describe '#update_document', :vcr do
     it 'runs' do
       doc_id = 'test_update_1'
       client.create_document(
@@ -108,7 +108,7 @@ RSpec.describe Colore::Client, :vcr do
     end
   end
 
-  describe '#update_title' do
+  describe '#update_title', :vcr do
     it 'runs' do
       doc_id = 'test_update_title_1'
       client.create_document(
@@ -128,7 +128,7 @@ RSpec.describe Colore::Client, :vcr do
     end
   end
 
-  describe '#request_conversion' do
+  describe '#request_conversion', :vcr do
     it 'runs' do
       doc_id = 'test_new_conv_1'
       client.create_document(
@@ -148,7 +148,7 @@ RSpec.describe Colore::Client, :vcr do
     end
   end
 
-  describe '#delete_document' do
+  describe '#delete_document', :vcr do
     it 'runs' do
       doc_id = 'test_delete_doc_1'
       client.create_document(
@@ -163,7 +163,7 @@ RSpec.describe Colore::Client, :vcr do
     end
   end
 
-  describe '#delete_version' do
+  describe '#delete_version', :vcr do
     it 'runs' do
       doc_id = 'test_delete_version_1'
       client.create_document(
@@ -201,7 +201,7 @@ RSpec.describe Colore::Client, :vcr do
     end
   end
 
-  describe '#get_document' do
+  describe '#get_document', :vcr do
     it 'runs' do
       doc_id = 'test_get_doc_1'
       client.create_document(
@@ -223,7 +223,7 @@ RSpec.describe Colore::Client, :vcr do
     end
   end
 
-  describe '#get_document_info' do
+  describe '#get_document_info', :vcr do
     it 'runs' do
       doc_id = 'test_get_docinfo_1'
       client.create_document(
@@ -247,7 +247,7 @@ RSpec.describe Colore::Client, :vcr do
     end
   end
 
-  describe '#convert' do
+  describe '#convert', :vcr do
     it 'runs' do
       rsp = client.convert content: File.read(filename), action: 'ocr_text'
       expect(rsp).to be_a String

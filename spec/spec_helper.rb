@@ -20,7 +20,7 @@ def fixture(name)
 end
 
 VCR.configure do |c|
-  c.cassette_library_dir = SPEC_BASE.join('fixtures/cassettes')
+  c.cassette_library_dir = 'spec/fixtures/cassettes'
   c.hook_into :webmock
   c.configure_rspec_metadata!
 end
