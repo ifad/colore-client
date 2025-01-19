@@ -36,7 +36,7 @@ client.ping or abort "No connection to Colore"
 
 doc_id = client.generate_doc_id
 file = File.new('foo.jpg')
-content = f.read
+content = file.read
 
 # Store a file
 conversion_callback = 'http:/localhost:10000/foo' # you should have a listener on this port
