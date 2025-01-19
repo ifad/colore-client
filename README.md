@@ -35,7 +35,7 @@ client.ping or abort "No connection to Colore"
 
 doc_id = client.generate_doc_id
 file = File.new('foo.jpg')
-content = f.read
+content = file.read
 
 # Store a file
 conversion_callback = 'http:/localhost:10000/foo' # you should have a listener on this port
@@ -75,11 +75,11 @@ See the [YARD doc](https://www.rubydoc.info/github/ifad/colore-client) for more 
 The client takes an optional Logger as an initialization parameter:
 
 ```ruby
-client = Colore::Client.new base_uri: base_uri, app: app, logger: Logger.new(STDOUT)
+client = Colore::Client.new base_uri: base_uri, app: app, logger: Logger.new($stdout)
 ```
 
 This can also be set at any time:
 
 ```ruby
-client.logger = Logger.new(STDERR)
+client.logger = Logger.new($stderr)
 ```
