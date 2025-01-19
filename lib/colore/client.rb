@@ -65,7 +65,7 @@ module Colore
     # Tests the connection with Colore. Will raise an error if the connection cannot be
     # established.
     def ping
-      send_request :get, '/'
+      send_request :head, '/'
       true
     end
 

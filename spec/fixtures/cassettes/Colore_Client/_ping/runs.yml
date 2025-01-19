@@ -1,74 +1,39 @@
 ---
 http_interactions:
 - request:
-    method: get
+    method: head
     uri: http://localhost:9240/
     body:
       encoding: US-ASCII
       string: ''
     headers:
-      Accept:
-      - "*/*; q=0.5, application/xml"
-      Accept-Encoding:
-      - gzip, deflate
       User-Agent:
-      - Ruby
+      - Colore Client
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
   response:
     status:
       code: 200
       message: OK
     headers:
+      Date:
+      - Sun, 19 Jan 2025 22:28:16 GMT
+      Connection:
+      - close
       Content-Type:
       - text/html;charset=utf-8
       Content-Length:
-      - '977'
+      - '262'
       X-Xss-Protection:
       - 1; mode=block
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
       - SAMEORIGIN
-      Connection:
-      - keep-alive
-      Server:
-      - thin
     body:
       encoding: UTF-8
-      string: |
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <link href='css/bootstrap.min.css' rel='stylesheet'>
-            <link href='css/colore.css' rel='stylesheet'>
-            <script src='js/jquery.min.js' type='text/javascript'></script>
-            <script src='js/bootstrap.min.js' type='text/javascript'></script>
-            <script src='js/colore.js' type='text/javascript'></script>
-          </head>
-          <meta content='width=device-width, initial-scale=1' name='viewport'>
-          <body>
-            <div class='navbar navbar-inverse'>
-              <img src='images/logo.png'>
-              <span>Colore storage system</span>
-              <span>Convert</span>
-              <span>API</span>
-            </div>
-            <div class='container'>
-              <!DOCTYPE html>
-              <html>
-                <head>
-                  <title>Colore</title>
-                </head>
-                <body>
-                  <h1>Colore</h1>
-                  <p>
-                    Welcome to the Colore application. This is an API service to store and convert
-                    documents.
-                  </p>
-                </body>
-              </html>
-            </div>
-          </body>
-        </html>
-    http_version: 
-  recorded_at: Tue, 10 Feb 2015 12:11:21 GMT
-recorded_with: VCR 2.9.3
+      string: ''
+  recorded_at: Sun, 19 Jan 2025 22:28:16 GMT
+recorded_with: VCR 6.3.1

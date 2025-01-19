@@ -29,7 +29,7 @@ RSpec.describe Colore::Client do
     end
 
     it 'raises ColoreUnavailable on ECONNREFUSED' do
-      allow(client.send(:connection)).to receive(:get) { raise Faraday::ConnectionFailed }
+      allow(client.send(:connection)).to receive(:head) { raise Faraday::ConnectionFailed }
       expect { client.ping }.to raise_error(Colore::Errors::ColoreUnavailable)
     end
   end
