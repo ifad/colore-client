@@ -48,7 +48,7 @@ module Colore
       @app = app
       @backtrace = backtrace
       @logger = logger
-      @connection = Faraday.new(headers: { 'User-Agent' => user_agent })
+      @connection = Faraday.new(url: base_uri, headers: { 'User-Agent' => user_agent })
     end
 
     # Generates a document id that is reasonably guaranteed to be unique for your app.
@@ -59,7 +59,7 @@ module Colore
     # Tests the connection with Colore. Will raise an error if the connection cannot be
     # established.
     def ping
-      send_request :get, '', :binary
+      send_request :get, '/'
       true
     end
 
@@ -123,10 +123,10 @@ module Colore
       if content
         with_tempfile(content) do |io|
           params[:file] = io
-          response = send_request :post, "document/#{app}/#{doc_id}/#{base_filename}", params, :json
+          response = send_request :post, "#{url_for_base(doc_id)}/#{base_filename}", params, :json
         end
       else
-        response = send_request :post, "document/#{app}/#{doc_id}/#{base_filename}", params, :json
+        response = send_request :post, "#{url_for_base(doc_id)}/#{base_filename}", params, :json
       end
       response
     end
@@ -145,7 +145,7 @@ module Colore
     #
     # @param doc_id [String] the document's unique identifier
     # @param filename [String] the name of the file to convert
-    # @param version [String] the version to store (if not specified, will be [CURRENT]
+    # @param version [String] the version to store (if not specified, will be {Colore::CURRENT}
     # @param action [String] the conversion to perform
     # @param callback_url [String] an optional callback URL that Colore will send the
     #        results of its conversion to. It is your responsibility to
@@ -153,7 +153,7 @@ module Colore
     #        results of the conversion in it
     #
     # @return [Hash] a standard response
-    def request_conversion(doc_id:, filename:, action:, version: CURRENT, callback_url: nil)
+    def request_conversion(doc_id:, filename:, action:, version: Colore::CURRENT, callback_url: nil)
       params = {}
       params[:callback_url] = callback_url if callback_url
       params[:backtrace] = backtrace if backtrace
@@ -195,10 +195,10 @@ module Colore
     # @param filename [String] the name of the file to retrieve
     #
     # @return [String] the file contents
-    def get_document(doc_id:, filename:, version: CURRENT)
+    def get_document(doc_id:, filename:, version: Colore::CURRENT)
       params = {}
       params[:backtrace] = backtrace if backtrace
-      send_request :get, path_for(doc_id, filename, version), {}, :binary
+      send_request :get, path_for(doc_id, filename, version), {}
     end
 
     # Retrieves information about a document.
@@ -228,7 +228,7 @@ module Colore
         params[:action] = action
         params[:language] = language if language
         params[:backtrace] = backtrace if backtrace
-        response = send_request :post, 'convert', params, :binary
+        response = send_request :post, 'convert', params
       end
       response
     end
@@ -237,9 +237,9 @@ module Colore
     #
     # @param doc_id [String] the document's unique identifier
     # @param filename [String] the name of the file
-    # @param version [String] the version of the document (defaults to 'current')
+    # @param version [String] the version of the document (defaults to {Colore::CURRENT})
     # @return [String] the generated path
-    def path_for(doc_id, filename, version = 'current')
+    def path_for(doc_id, filename, version = Colore::CURRENT)
       "#{url_for_base doc_id}/#{version}/#{File.basename(filename)}"
     end
 
@@ -250,7 +250,7 @@ module Colore
     end
 
     def send_request(type, path, params = {}, expect = :binary)
-      url = URI.join(base_uri, path).to_s
+      url = path.to_s
       logger.debug("Send #{type}: #{url}")
       logger.debug("  params: #{params.inspect}")
       response =
