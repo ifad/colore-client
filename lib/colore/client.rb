@@ -145,7 +145,7 @@ module Colore
     #
     # @param doc_id [String] the document's unique identifier
     # @param filename [String] the name of the file to convert
-    # @param version [String] the version to store (if not specified, will be {Colore::CURRENT}
+    # @param version [String] the version to store (defaults to {Colore::CURRENT})
     # @param action [String] the conversion to perform
     # @param callback_url [String] an optional callback URL that Colore will send the
     #        results of its conversion to. It is your responsibility to
