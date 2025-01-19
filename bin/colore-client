@@ -9,109 +9,133 @@ $LOAD_PATH << BIN_BASE.join('../lib')
 
 require 'colore-client'
 
-base_uri = 'http://localhost:9240/'
-backtrace = false
-request = nil
-app = nil
-doc_id = nil
-version = Colore::CURRENT
-language = 'en'
-actions = nil
-title = nil
-file = nil
-output_file = nil
-callback_url = nil
-verbose = nil
+DEFAULT_ARGS = {
+  base_uri: 'http://localhost:9240/',
+  version: Colore::CURRENT,
+  language: 'en'
+}.freeze
+
+REQUIRED_ARGS = %i[
+  request
+].freeze
 
 REQUESTS = %w[
   ping
   create_document update_document update_title
-  request_conversion delete_document
-  delete_version get_document get_document_info
-  convert
+  convert request_conversion
+  delete_document delete_version
+  get_document get_document_info
 ].freeze
 
-OptionParser.new do |opts|
-  opts.banner = 'Usage: colore_client -r {request} [opts]'
-  opts.on('-r', '--request NAME', REQUESTS, 'Request to perform') { |r| request = r }
-  opts.on('-u', '--base-uri BASE_URI', 'Base URI') { |u| base_uri = u }
-  opts.on('-a', '--app APP', 'Application name') { |a| app = a }
-  opts.on('-d', '--doc-id ID', 'Document id') { |d| doc_id = d }
-  opts.on('-v', '--version VERSION', 'Version id') { |v| version = v }
-  opts.on('-f', '--file FILE', 'File to upload/convert') { |f| file = f }
-  opts.on('-o', '--output-file FILE', 'File to write to') { |f| output_file = f }
-  opts.on('-m', '--actions x,y,z', Array, 'Conversion actions') { |f| actions = f }
-  opts.on('-l', '--language LANG', 'Language of document') { |l| language = l }
-  opts.on('-t', '--title TITLE', 'Document title') { |t| title = t }
-  opts.on('-c', '--callback-url URL', 'Callback URL for conversion callbacks') { |c| callback_url = c }
-  opts.on('-B', '--backtrace', 'Request backtrace on errors') { backtrace = true }
-  opts.on('-V', '--verbose', 'Log interactions') { verbose = true }
+args = DEFAULT_ARGS.dup
+
+optparse = OptionParser.new do |opts|
+  opts.banner = 'Usage: colore-client -a {app} -u {base_uri} -r {request} [opts]'
+  opts.on('-r', '--request NAME', REQUESTS, 'Request to perform') { |request| args[:request] = request }
+  opts.on('-a', '--app APP', 'Application name') { |app| args[:app] = app }
+  opts.on('-u', '--base-uri BASE_URI', "Base URI (Defaults to '#{args[:base_uri]})'") { |base_uri| args[:base_uri] = base_uri }
+  opts.on('-d', '--doc-id ID', 'Document ID') { |doc_id| args[:doc_id] = doc_id }
+  opts.on('-v', '--version VERSION', 'Version ID') { |version| args[:version] = version }
+  opts.on('-f', '--file FILE', 'File to upload/convert') { |file| args[:file] = file }
+  opts.on('-o', '--output-file FILE', 'File to write to') { |output_file| args[:output_file] = output_file }
+  opts.on('-m', '--actions x,y,z', Array, 'Comma separated list of conversion actions') { |actions| args[:actions] = actions }
+  opts.on('-l', '--language LANG', "Language of document (Defaults to '#{args[:language]}')") { |language| args[:language] = language }
+  opts.on('-t', '--title TITLE', 'Document title') { |title| args[:title] = title }
+  opts.on('-c', '--callback-url URL', 'Callback URL for conversion callbacks') { |callback_url| args[:callback_url] = callback_url }
+  opts.on('-B', '--backtrace', 'Request backtrace on errors') { args[:backtrace] = true }
+  opts.on('-V', '--verbose', 'Log interactions') { args[:verbose] = true }
   opts.on('-h', '--help', 'This message') do
     puts opts
     exit 0
   end
   opts.separator "Valid requests: #{REQUESTS.join ', '}"
-end.parse!
-
-logger = Logger.new(verbose ? $stdout : nil)
-
-client = Colore::Client.new base_uri: base_uri, app: app, backtrace: backtrace, logger: logger
+end
 
 begin
-  case request
-  when 'ping'
-    client.ping
-  when 'create_document'
-    client.create_document(
-      doc_id: doc_id,
-      title: title,
-      filename: (File.basename(file) if file),
-      content: (File.read(file) if file),
-      actions: actions,
-      callback_url: callback_url
-    )
-  when 'update_document'
-    client.update_document(
-      doc_id: doc_id,
-      filename: (File.basename(file) if file),
-      content: (File.read(file) if file),
-      actions: actions,
-      callback_url: callback_url
-    )
-  when 'update_title'
-    resp = client.update_document(doc_id: doc_id, title: title)
-  when 'request_conversion'
-    actions.each do |action|
-      resp = client.request_conversion doc_id: doc_id, version: version, filename: File.basename(file), action: action, callback_url: callback_url
-    end
-  when 'delete_document'
-    resp = client.delete_document doc_id: doc_id
-  when 'delete_version'
-    resp = client.delete_version doc_id: doc_id, version: version
-  when 'get_document'
-    resp = client.get_document doc_id: doc_id, version: version, filename: File.basename(file)
-    if output_file
-      File.binwrite(output_file, resp)
-      resp = nil
-    end
-  when 'get_document_info'
-    resp = client.get_document_info doc_id: doc_id
-  when 'convert'
-    resp = client.convert content: File.read(file), action: actions[0], language: language
-    if output_file
-      File.binwrite(output_file, resp)
-      resp = nil
-    end
-  else
-    raise "Unhandled request type: #{request}"
-  end
+  optparse.parse!
+  missing_args = REQUIRED_ARGS.select { |param| args[param].nil? }
+  raise OptionParser::MissingArgument, missing_args.join(', ') unless missing_args.empty?
+rescue OptionParser::ParseError => e
+  puts e
+  puts optparse
+  exit
+end
 
-  if resp.respond_to? :to_hash
-    puts resp.to_hash
-  else
-    puts resp
+logger = Logger.new(args[:verbose] ? $stdout : nil)
+
+client = Colore::Client.new base_uri: args[:base_uri], app: args[:app], backtrace: args[:backtrace], logger: logger
+
+begin
+  resp =
+    case args[:request]
+    when 'ping'
+      client.ping
+    when 'create_document'
+      client.create_document(
+        doc_id: args[:doc_id],
+        title: args[:title],
+        filename: (File.basename(args[:file]) if args[:file]),
+        content: (File.read(args[:file]) if args[:file]),
+        actions: args[:actions],
+        callback_url: args[:callback_url]
+      )
+    when 'update_document'
+      client.update_document(
+        doc_id: args[:doc_id],
+        filename: (File.basename(args[:file]) if args[:file]),
+        content: (File.read(args[:file]) if args[:file]),
+        actions: args[:actions],
+        callback_url: args[:callback_url]
+      )
+    when 'update_title'
+      client.update_document(doc_id: args[:doc_id], title: args[:title])
+    when 'request_conversion'
+      args[:actions].map do |action|
+        client.request_conversion doc_id: args[:doc_id], version: args[:version], filename: File.basename(args[:file]), action: action, callback_url: args[:callback_url]
+      end
+    when 'delete_document'
+      client.delete_document doc_id: args[:doc_id]
+    when 'delete_version'
+      client.delete_version doc_id: args[:doc_id], version: args[:version]
+    when 'get_document'
+      resp = client.get_document doc_id: args[:doc_id], version: args[:version], filename: File.basename(args[:file])
+
+      if args[:output_file]
+        File.binwrite(args[:output_file], resp)
+        resp = nil
+      end
+
+      resp
+    when 'get_document_info'
+      client.get_document_info doc_id: args[:doc_id]
+    when 'convert'
+      resp = client.convert content: File.read(args[:file]), action: args[:actions][0], language: args[:language]
+
+      if args[:output_file]
+        File.binwrite(args[:output_file], resp)
+        resp = nil
+      end
+
+      resp
+    else
+      raise "Unhandled request type: #{request}"
+    end
+
+  responses =
+    if resp.is_a?(Array)
+      resp
+    else
+      [resp]
+    end
+
+  responses.each do |response|
+    if response.respond_to? :to_hash
+      puts response.to_hash
+    else
+      puts response
+    end
   end
 rescue Colore::Errors::APIError => e
   warn "Received error from Colore: #{e.http_code}, #{e.message}"
-  warn "Backtrace: #{e.rsp_backtrace.inspect}" if backtrace && e.rsp_backtrace
+  warn "Backtrace: #{e.rsp_backtrace.inspect}" if args[:backtrace] && e.rsp_backtrace
 end
