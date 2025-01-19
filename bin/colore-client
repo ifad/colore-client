@@ -3,6 +3,7 @@
 
 require 'optparse'
 require 'pathname'
+require 'pp'
 
 BIN_BASE = Pathname.new(__dir__)
 $LOAD_PATH << BIN_BASE.join('../lib')
@@ -129,13 +130,9 @@ begin
     end
 
   responses.each do |response|
-    if response.respond_to? :to_hash
-      puts response.to_hash
-    else
-      puts response
-    end
+    pp response
   end
 rescue Colore::Errors::APIError => e
   warn "Received error from Colore: #{e.http_code}, #{e.message}"
-  warn "Backtrace: #{e.rsp_backtrace.inspect}" if args[:backtrace] && e.rsp_backtrace
+  warn "Backtrace: #{e.rsp_backtrace.pretty_inspect}" if args[:backtrace] && e.rsp_backtrace
 end
