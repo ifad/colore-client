@@ -1,0 +1,46 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: http://localhost:9240/document/client_test/test_doc_2/test%20(1)%5B1%5D.txt
+    body:
+      encoding: UTF-8
+      string: "-------------RubyMultipartPost-9f4da2e4f8d1042acbae564ca1f04ef9\r\nContent-Disposition:
+        form-data; name=\"title\"\r\n\r\nSample document\r\n-------------RubyMultipartPost-9f4da2e4f8d1042acbae564ca1f04ef9\r\nContent-Disposition:
+        form-data; name=\"actions[]\"\r\n\r\nocr\r\n-------------RubyMultipartPost-9f4da2e4f8d1042acbae564ca1f04ef9\r\nContent-Disposition:
+        form-data; name=\"author\"\r\n\r\nspliffy\r\n-------------RubyMultipartPost-9f4da2e4f8d1042acbae564ca1f04ef9\r\nContent-Disposition:
+        form-data; name=\"file\"; filename=\"colore20250120-81818-3lvwha\"\r\nContent-Length:
+        10\r\nContent-Type: application/octet-stream\r\nContent-Transfer-Encoding:
+        binary\r\n\r\nTest File\n\r\n-------------RubyMultipartPost-9f4da2e4f8d1042acbae564ca1f04ef9--\r\n"
+    headers:
+      User-Agent:
+      - Colore Client
+      Content-Type:
+      - multipart/form-data; boundary=-----------RubyMultipartPost-9f4da2e4f8d1042acbae564ca1f04ef9
+      Content-Length:
+      - '701'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Mon, 20 Jan 2025 12:56:24 GMT
+      Connection:
+      - close
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '154'
+      X-Content-Type-Options:
+      - nosniff
+    body:
+      encoding: UTF-8
+      string: '{"status":201,"description":"Document stored","app":"client_test","doc_id":"test_doc_2","path":"/document/client_test/test_doc_2/current/test
+        (1)[1].txt"}'
+  recorded_at: Mon, 20 Jan 2025 12:56:24 GMT
+recorded_with: VCR 6.3.1
