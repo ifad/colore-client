@@ -33,6 +33,11 @@ RSpec.describe Colore::Client do
       allow(client.send(:connection)).to receive(:head) { raise Faraday::ConnectionFailed }
       expect { client.ping }.to raise_error(Colore::Errors::ColoreUnavailable)
     end
+
+    it 'raises a generic error when response is unknown' do
+      allow(client.send(:connection)).to receive(:head).and_return(Faraday::Response.new)
+      expect { client.ping }.to raise_error(Colore::Errors::ServerError, 'Unknown error (see response_body)')
+    end
   end
 
   describe '#create_document', :vcr do
