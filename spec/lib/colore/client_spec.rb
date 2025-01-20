@@ -101,6 +101,25 @@ RSpec.describe Colore::Client do
         expect(rsp['path']).to eq "/document/#{app}/#{doc_id}/#{Colore::CURRENT}/#{filename.basename}"
       end
     end
+
+    context 'when content responds to read' do
+      it 'runs' do
+        doc_id = 'test_doc_3'
+        rsp = client.create_document(
+          doc_id: doc_id,
+          filename: filename,
+          content: filename,
+          title: 'Sample document',
+          author: 'spliffy',
+          actions: ['ocr'],
+          callback_url: nil
+        )
+        expect(rsp).not_to be_nil
+        expect(rsp['status']).to eq 201
+        expect(rsp['description']).not_to be_empty
+        expect(rsp['path']).to eq "/document/#{app}/#{doc_id}/#{Colore::CURRENT}/#{filename.basename}"
+      end
+    end
   end
 
   describe '#update_document', :vcr do
