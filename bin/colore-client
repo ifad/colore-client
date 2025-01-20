@@ -8,7 +8,7 @@ require 'pp'
 BIN_BASE = Pathname.new(__dir__)
 $LOAD_PATH << BIN_BASE.join('../lib')
 
-require 'colore-client'
+require 'colore/client'
 
 DEFAULT_ARGS = {
   base_uri: 'http://localhost:9240/',

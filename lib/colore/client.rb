@@ -9,6 +9,9 @@ require 'securerandom'
 require 'tempfile'
 require 'uri'
 
+require_relative 'client/version'
+require_relative 'errors'
+
 # The Colore module serves as the namespace for the Colore client and related classes.
 module Colore
   # The name of the 'current' version.
