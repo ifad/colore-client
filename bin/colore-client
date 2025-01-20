@@ -67,24 +67,27 @@ logger = Logger.new(args[:verbose] ? $stdout : nil)
 client = Colore::Client.new base_uri: args[:base_uri], app: args[:app], backtrace: args[:backtrace], logger: logger
 
 begin
+  file = Pathname.new(args[:file]) if args[:file]
+
   resp =
     case args[:request]
     when 'ping'
       client.ping
     when 'create_document'
+
       client.create_document(
         doc_id: args[:doc_id],
         title: args[:title],
-        filename: (File.basename(args[:file]) if args[:file]),
-        content: (File.read(args[:file]) if args[:file]),
+        filename: file.basename,
+        content: file,
         actions: args[:actions],
         callback_url: args[:callback_url]
       )
     when 'update_document'
       client.update_document(
         doc_id: args[:doc_id],
-        filename: (File.basename(args[:file]) if args[:file]),
-        content: (File.read(args[:file]) if args[:file]),
+        filename: file.basename,
+        content: file,
         actions: args[:actions],
         callback_url: args[:callback_url]
       )
@@ -92,14 +95,14 @@ begin
       client.update_document(doc_id: args[:doc_id], title: args[:title])
     when 'request_conversion'
       args[:actions].map do |action|
-        client.request_conversion doc_id: args[:doc_id], version: args[:version], filename: File.basename(args[:file]), action: action, callback_url: args[:callback_url]
+        client.request_conversion doc_id: args[:doc_id], version: args[:version], filename: file.basename, action: action, callback_url: args[:callback_url]
       end
     when 'delete_document'
       client.delete_document doc_id: args[:doc_id]
     when 'delete_version'
       client.delete_version doc_id: args[:doc_id], version: args[:version]
     when 'get_document'
-      resp = client.get_document doc_id: args[:doc_id], version: args[:version], filename: File.basename(args[:file])
+      resp = client.get_document doc_id: args[:doc_id], version: args[:version], filename: file.basename
 
       if args[:output_file]
         File.binwrite(args[:output_file], resp)
@@ -110,7 +113,7 @@ begin
     when 'get_document_info'
       client.get_document_info doc_id: args[:doc_id]
     when 'convert'
-      resp = client.convert content: File.read(args[:file]), action: args[:actions][0], language: args[:language]
+      resp = client.convert content: file, action: args[:actions][0], language: args[:language]
 
       if args[:output_file]
         File.binwrite(args[:output_file], resp)

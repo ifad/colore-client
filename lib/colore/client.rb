@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require 'faraday'
+require 'faraday/multipart'
 require 'json'
 require 'logger'
+require 'marcel'
 require 'securerandom'
 require 'tempfile'
 require 'uri'
@@ -48,7 +50,11 @@ module Colore
       @app = app
       @backtrace = backtrace
       @logger = logger
-      @connection = Faraday.new(url: base_uri, headers: { 'User-Agent' => user_agent })
+      @connection = Faraday.new(url: base_uri, headers: { 'User-Agent' => user_agent }) do |faraday|
+        faraday.request :multipart
+        faraday.request :url_encoded
+        faraday.adapter :net_http
+      end
     end
 
     # Generates a document id that is reasonably guaranteed to be unique for your app.
@@ -90,7 +96,7 @@ module Colore
 
       response = nil
       with_tempfile(content) do |io|
-        params[:file] = io
+        params[:file] = file_param(io)
         response = send_request :put, "#{url_for_base doc_id}/#{base_filename}", params, :json
       end
       response
@@ -122,7 +128,7 @@ module Colore
       response = nil
       if content
         with_tempfile(content) do |io|
-          params[:file] = io
+          params[:file] = file_param(io)
           response = send_request :post, "#{url_for_base(doc_id)}/#{base_filename}", params, :json
         end
       else
@@ -224,7 +230,7 @@ module Colore
 
       response = nil
       with_tempfile(content) do |io|
-        params[:file] = io
+        params[:file] = file_param(io)
         params[:action] = action
         params[:language] = language if language
         params[:backtrace] = backtrace if backtrace
@@ -303,6 +309,10 @@ module Colore
         tf.close
         yield File.new(tf)
       end
+    end
+
+    def file_param(io)
+      Faraday::Multipart::FilePart.new(io, Marcel::MimeType.for(io))
     end
   end
 end
