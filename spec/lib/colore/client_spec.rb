@@ -3,18 +3,19 @@
 require 'spec_helper'
 
 RSpec.describe Colore::Client do
-  let(:client) { described_class.new app: 'client_test', base_uri: 'http://localhost:9240/' }
+  let(:client) { described_class.new app: app, base_uri: 'http://localhost:9240/' }
   let(:filename) { fixture('quickfox.jpg') }
+  let(:app) { 'client_test' }
 
   describe '.generate_doc_id' do
     it 'runs' do
-      expect(described_class.generate_doc_id.to_s).not_to eq ''
+      expect(described_class.generate_doc_id).not_to be_empty
     end
   end
 
   describe '#generate_doc_id' do
     it 'runs' do
-      expect(client.generate_doc_id.to_s).not_to eq ''
+      expect(client.generate_doc_id).not_to be_empty
     end
   end
 
@@ -48,8 +49,8 @@ RSpec.describe Colore::Client do
       )
       expect(rsp).not_to be_nil
       expect(rsp['status']).to eq 201
-      expect(rsp['description'].to_s).not_to eq ''
-      expect(rsp['path'].to_s).not_to eq ''
+      expect(rsp['description']).not_to be_empty
+      expect(rsp['path']).to eq "/document/#{app}/#{doc_id}/#{Colore::CURRENT}/#{filename.basename}"
     end
 
     it 'fails if document exists' do
@@ -92,8 +93,8 @@ RSpec.describe Colore::Client do
         content: File.read(filename)
       )
       expect(rsp['status']).to eq 201
-      expect(rsp['description'].to_s).not_to eq ''
-      expect(rsp['path'].to_s).not_to eq ''
+      expect(rsp['description']).not_to be_empty
+      expect(rsp['path']).to eq "/document/#{app}/#{doc_id}/#{Colore::CURRENT}/#{filename.basename}"
     end
 
     it 'fails on an invalid doc_id' do
@@ -118,7 +119,7 @@ RSpec.describe Colore::Client do
       )
       rsp = client.update_title(doc_id: doc_id, title: 'This is a new title')
       expect(rsp['status']).to eq 200
-      expect(rsp['description'].to_s).not_to eq ''
+      expect(rsp['description']).not_to be_empty
     end
 
     it 'fails on an invalid doc_id' do
@@ -144,7 +145,7 @@ RSpec.describe Colore::Client do
         action: 'ocr'
       )
       expect(rsp['status']).to eq 202
-      expect(rsp['description'].to_s).not_to eq ''
+      expect(rsp['description']).not_to be_empty
     end
   end
 
@@ -159,7 +160,7 @@ RSpec.describe Colore::Client do
       )
       rsp = client.delete_document(doc_id: doc_id)
       expect(rsp['status']).to eq 200
-      expect(rsp['description'].to_s).not_to eq ''
+      expect(rsp['description']).not_to be_empty
     end
   end
 
@@ -179,7 +180,7 @@ RSpec.describe Colore::Client do
       )
       rsp = client.delete_version(doc_id: doc_id, version: 'v001')
       expect(rsp['status']).to eq 200
-      expect(rsp['description'].to_s).not_to eq ''
+      expect(rsp['description']).not_to be_empty
     end
 
     it 'refuses to delete the current version' do
@@ -234,7 +235,7 @@ RSpec.describe Colore::Client do
       )
       rsp = client.get_document_info doc_id: doc_id
       expect(rsp['status']).to eq 200
-      expect(rsp['description'].to_s).not_to eq ''
+      expect(rsp['description']).not_to be_empty
       expect(rsp['current_version']).to eq 'v001'
       expect(rsp['versions']).not_to be_nil
       expect(rsp['title']).to eq 'Sample document'
