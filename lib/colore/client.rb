@@ -104,7 +104,7 @@ module Colore
     #        results of the conversion in it
     #
     # @return [Hash] a standard response
-    def update_document(doc_id:, filename:, content: nil, author: nil, actions: nil, callback_url: nil)
+    def update_document(doc_id:, filename:, content:, author: nil, actions: nil, callback_url: nil)
       params = {}
       params[:actions] = actions if actions
       params[:author] = author if author
@@ -114,12 +114,8 @@ module Colore
       base_filename = File.basename(filename)
 
       response = nil
-      if content
-        with_tempfile(content) do |io|
-          params[:file] = file_param(io)
-          response = send_request :post, "#{url_for_base(doc_id)}/#{encode_param(base_filename)}", params, :json
-        end
-      else
+      with_tempfile(content) do |io|
+        params[:file] = file_param(io)
         response = send_request :post, "#{url_for_base(doc_id)}/#{encode_param(base_filename)}", params, :json
       end
       response
