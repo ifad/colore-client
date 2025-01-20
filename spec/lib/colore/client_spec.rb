@@ -112,14 +112,17 @@ RSpec.describe Colore::Client do
   describe '#update_title', :vcr do
     it 'runs' do
       doc_id = 'test_update_title_1'
+      new_title = 'This is a new title'
       client.create_document(
         doc_id: doc_id,
         filename: filename,
         content: File.read(filename)
       )
-      rsp = client.update_title(doc_id: doc_id, title: 'This is a new title')
+      rsp = client.update_title(doc_id: doc_id, title: new_title)
       expect(rsp['status']).to eq 200
       expect(rsp['description']).not_to be_empty
+      rsp = client.get_document_info(doc_id: doc_id)
+      expect(rsp['title']).to eq new_title
     end
 
     it 'fails on an invalid doc_id' do
