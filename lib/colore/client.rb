@@ -23,21 +23,6 @@ module Colore
       SecureRandom.uuid
     end
 
-    # Returns the URI parser based on the Ruby version.
-    #
-    # If `URI::RFC2396_PARSER` is defined, it will return that parser.
-    # Otherwise, it will return `URI::DEFAULT_PARSER`.
-    #
-    # @return [URI::Parser] the URI parser to use
-    def self.uri_parser
-      @uri_parser ||=
-        if defined?(URI::RFC2396_PARSER)
-          URI::RFC2396_PARSER
-        else
-          URI::DEFAULT_PARSER
-        end
-    end
-
     # Constructor.
     #
     # @param base_uri [String] The base URI of the Colore service that you wish to attach to
@@ -97,7 +82,7 @@ module Colore
       response = nil
       with_tempfile(content) do |io|
         params[:file] = file_param(io)
-        response = send_request :put, "#{url_for_base doc_id}/#{base_filename}", params, :json
+        response = send_request :put, "#{url_for_base doc_id}/#{encode_param(base_filename)}", params, :json
       end
       response
     end
@@ -129,10 +114,10 @@ module Colore
       if content
         with_tempfile(content) do |io|
           params[:file] = file_param(io)
-          response = send_request :post, "#{url_for_base(doc_id)}/#{base_filename}", params, :json
+          response = send_request :post, "#{url_for_base(doc_id)}/#{encode_param(base_filename)}", params, :json
         end
       else
-        response = send_request :post, "#{url_for_base(doc_id)}/#{base_filename}", params, :json
+        response = send_request :post, "#{url_for_base(doc_id)}/#{encode_param(base_filename)}", params, :json
       end
       response
     end
@@ -144,7 +129,7 @@ module Colore
     #
     # @return [Hash] a standard response
     def update_title(doc_id:, title:)
-      send_request :post, "#{url_for_base(doc_id)}/title/#{self.class.uri_parser.escape title}", {}, :json
+      send_request :post, "#{url_for_base(doc_id)}/title/#{encode_param(title)}", {}, :json
     end
 
     # Requests a conversion of an existing document.
@@ -313,6 +298,10 @@ module Colore
 
     def file_param(io)
       Faraday::Multipart::FilePart.new(io, Marcel::MimeType.for(io))
+    end
+
+    def encode_param(param)
+      URI.encode_www_form_component(param).gsub('+', '%20')
     end
   end
 end

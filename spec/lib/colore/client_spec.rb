@@ -75,6 +75,27 @@ RSpec.describe Colore::Client do
         )
       end.to raise_error Colore::Errors::ClientError, 'A document with this doc_id already exists'
     end
+
+    context 'with spaces and brackets in the filename' do
+      let(:filename) { fixture('test (1)[1].txt') }
+
+      it 'runs' do
+        doc_id = 'test_doc_2'
+        rsp = client.create_document(
+          doc_id: doc_id,
+          filename: filename,
+          content: File.read(filename),
+          title: 'Sample document',
+          author: 'spliffy',
+          actions: ['ocr'],
+          callback_url: nil
+        )
+        expect(rsp).not_to be_nil
+        expect(rsp['status']).to eq 201
+        expect(rsp['description']).not_to be_empty
+        expect(rsp['path']).to eq "/document/#{app}/#{doc_id}/#{Colore::CURRENT}/#{filename.basename}"
+      end
+    end
   end
 
   describe '#update_document', :vcr do
@@ -112,7 +133,7 @@ RSpec.describe Colore::Client do
   describe '#update_title', :vcr do
     it 'runs' do
       doc_id = 'test_update_title_1'
-      new_title = 'This is a new title'
+      new_title = 'Test +New+ (Title) [brackets]'
       client.create_document(
         doc_id: doc_id,
         filename: filename,
