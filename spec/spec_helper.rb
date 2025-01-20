@@ -13,7 +13,7 @@ require 'filemagic/ext'
 
 SPEC_BASE = Pathname.new(__dir__)
 
-require 'colore-client'
+require 'colore/client'
 
 def fixture(name)
   SPEC_BASE.join('fixtures', name)

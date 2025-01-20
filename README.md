@@ -58,12 +58,13 @@ File.open( 'foo.pdf', 'wb' ) { |f| f.write(pdf) }
 ## Available Methods
 
 ```ruby
-client.create_document doc_id:, filename:, content:, title:, author:, actions:[], callback_url
-client.update_document doc_id:, version:, filename:, content:, title:, author:, actions:[], callback_url:
-client.request_conversion doc_id:, version:, filename:, action: callback_url:
+client.create_document doc_id:, filename:, content:, title:, author:, actions:, callback_url:
+client.update_document doc_id:, filename:, content:, author:, actions:, callback_url:
+client.update_title doc_id:, title:
+client.request_conversion doc_id:, filename:, action:, version:, callback_url:
 client.delete_document doc_id:
 client.delete_version doc_id:, version:
-client.get_document doc_id:, version:, filename:
+client.get_document doc_id:, filename:, version:
 client.get_document_info doc_id:
 client.convert content:, action:, language:
 ```
