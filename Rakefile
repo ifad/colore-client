@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
-# Bundler
-require 'bundler/setup'
+require 'rake'
+require 'bundler/gem_tasks'
 
-# RSpec
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new
 
-# YARD
+require 'rubocop/rake_task'
+RuboCop::RakeTask.new
+
 require 'yard'
 YARD::Rake::YardocTask.new
 
-task default: :spec
+desc 'Default: run RuboCop and RSpec.'
+task default: %i[rubocop spec]
