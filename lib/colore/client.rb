@@ -52,7 +52,7 @@ module Colore
 
     # Tests the connection with Colore. Will raise an error if the connection cannot be
     # established.
-    def ping
+    def ping # rubocop:disable Naming/PredicateMethod
       send_request :head, '/'
       true
     end
