@@ -5,9 +5,9 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'byebug'
+gem 'mime-types'
 gem 'rake'
 gem 'rspec'
-gem 'ruby-filemagic'
 gem 'simplecov'
 gem 'vcr'
 gem 'webmock'

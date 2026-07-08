@@ -9,7 +9,6 @@ end
 require 'pathname'
 require 'byebug'
 require 'vcr'
-require 'filemagic/ext'
 
 SPEC_BASE = Pathname.new(__dir__)
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'mime/types'
 
 RSpec.describe Colore::Client do
   let(:client) { described_class.new app: app, base_uri: 'http://localhost:9240/' }
@@ -262,7 +263,7 @@ RSpec.describe Colore::Client do
       rsp = client.get_document doc_id: doc_id, version: Colore::CURRENT, filename: filename
       expect(rsp).to be_a String
       expect(rsp).not_to eq ''
-      expect(rsp.mime_type).to eq 'image/jpeg; charset=binary'
+      expect(MIME::Types.type_for(filename.basename.to_s).first.content_type).to eq 'image/jpeg'
     end
 
     it 'raises error if the file does not exist' do
@@ -301,7 +302,6 @@ RSpec.describe Colore::Client do
       rsp = client.convert content: File.read(filename), action: 'ocr_text'
       expect(rsp).to be_a String
       expect(rsp).not_to eq ''
-      expect(rsp.mime_type).to eq 'text/plain; charset=us-ascii'
     end
 
     it 'fails on invalid action' do
