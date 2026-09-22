@@ -7,7 +7,6 @@ gemspec
 gem 'byebug'
 gem 'rake'
 gem 'rspec'
-gem 'ruby-filemagic'
 gem 'simplecov'
 gem 'vcr'
 gem 'webmock'
