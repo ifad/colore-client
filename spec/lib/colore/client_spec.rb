@@ -260,9 +260,7 @@ RSpec.describe Colore::Client do
         title: 'Sample document'
       )
       rsp = client.get_document doc_id: doc_id, version: Colore::CURRENT, filename: filename
-      expect(rsp).to be_a String
-      expect(rsp).not_to eq ''
-      expect(rsp.mime_type).to eq 'image/jpeg; charset=binary'
+      expect(rsp).to eq File.binread(filename)
     end
 
     it 'raises error if the file does not exist' do
@@ -299,9 +297,7 @@ RSpec.describe Colore::Client do
   describe '#convert', :vcr do
     it 'runs' do
       rsp = client.convert content: File.read(filename), action: 'ocr_text'
-      expect(rsp).to be_a String
-      expect(rsp).not_to eq ''
-      expect(rsp.mime_type).to eq 'text/plain; charset=us-ascii'
+      expect(rsp).to eq "The quick brown fox jumps over the lazy dog\n"
     end
 
     it 'fails on invalid action' do
